@@ -1,0 +1,7 @@
+{
+  "name": "DHBW-Positioning-System",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
