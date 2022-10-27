@@ -1,0 +1,27 @@
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\appsettings.Development.json
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\appsettings.json
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\Dhbw positioning System Backend.exe
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\Dhbw positioning System Backend.deps.json
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\Dhbw positioning System Backend.runtimeconfig.json
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\Dhbw positioning System Backend.runtimeconfig.dev.json
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\Dhbw positioning System Backend.dll
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\Dhbw positioning System Backend.pdb
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\System.Data.SQLite.dll
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\SQLite.Interop.dll
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\SQLite.Interop.dll
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\SQLite.Interop.dll
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\SQLite.Interop.dll
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.csproj.AssemblyReference.cache
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.AssemblyInfoInputs.cache
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.AssemblyInfo.cs
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.csproj.CoreCompileInputs.cache
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\staticwebassets\Dhbw positioning System Backend.StaticWebAssets.Manifest.cache
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\staticwebassets\Dhbw positioning System Backend.StaticWebAssets.xml
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\scopedcss\bundle\Dhbw positioning System Backend.styles.css
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.RazorTargetAssemblyInfo.cache
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.csproj.CopyComplete
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.dll
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.pdb
+C:\Users\lneumann\Source\Repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\obj\Debug\netcoreapp3.1\Dhbw positioning System Backend.genruntimeconfig.cache

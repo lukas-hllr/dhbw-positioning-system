@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "dAZqJGlamJU6OlK+zpJkqFEXR/zII/LpbKw88dQBj8VfGUnqRiZQQkxGDKNl90sWsvAbxsscEoQkRt1I2bEVwg==",
+  "dgSpecHash": "VcDTOcjD8fU5uCQizOvtHg9O7BbkvlYFFpaZSc5gkEm/jskAXn3MFMKHq7Meo3DhiRUji00dHQqwdGi6/ziKqA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\lneumann\\source\\repos\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\lneumann\\Source\\Repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lneumann\\.nuget\\packages\\stub.system.data.sqlite.core.netstandard\\1.0.116\\stub.system.data.sqlite.core.netstandard.1.0.116.nupkg.sha512"
+  ],
   "logs": []
 }

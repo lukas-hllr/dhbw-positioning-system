@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lneumann\\source\\repos\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj": {}
+    "C:\\Users\\lneumann\\Source\\Repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lneumann\\source\\repos\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj": {
+    "C:\\Users\\lneumann\\Source\\Repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lneumann\\source\\repos\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj",
+        "projectUniqueName": "C:\\Users\\lneumann\\Source\\Repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj",
         "projectName": "Dhbw positioning System Backend",
-        "projectPath": "C:\\Users\\lneumann\\source\\repos\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj",
+        "projectPath": "C:\\Users\\lneumann\\Source\\Repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\Dhbw positioning System Backend.csproj",
         "packagesPath": "C:\\Users\\lneumann\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lneumann\\source\\repos\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\obj\\",
+        "outputPath": "C:\\Users\\lneumann\\Source\\Repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -43,6 +43,12 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Stub.System.Data.SQLite.Core.NetStandard": {
+              "target": "Package",
+              "version": "[1.0.116, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
