@@ -19,24 +19,27 @@ namespace Dhbw_positioning_System_Backend.Controllers
             _context = context;
         }
 
-        // GET: api/<MeasurementController>
+        // GET: Measurement
         [HttpGet]
         public IEnumerable<Measurement> Get()
         {
             return _context.Measurement.ToList();
         }
 
-        // GET api/<MeasurementController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/<MeasurementController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<Measurement> Post(Measurement measurement)
         {
+            var e = _context.Measurement.Add(new Measurement()
+            {
+                MeasurementId = 2,
+                Date = measurement.Date,
+                Latitude = measurement.Latitude,
+                Longitude = measurement.Longitude,
+                NetworkMeasurement = measurement.NetworkMeasurement
+            });
+            _context.SaveChanges();
+            return CreatedAtAction("asd",e.Entity );
         }
 
         // PUT api/<MeasurementController>/5
