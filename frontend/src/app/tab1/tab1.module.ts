@@ -6,7 +6,6 @@ import { Tab1Page } from './tab1.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 import { Tab1PageRoutingModule } from './tab1-routing.module';
-import {WifiWizard2} from "@awesome-cordova-plugins/wifi-wizard-2";
 
 @NgModule({
   imports: [

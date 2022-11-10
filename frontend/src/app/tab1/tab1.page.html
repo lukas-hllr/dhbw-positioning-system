@@ -13,11 +13,12 @@
     </ion-toolbar>
   </ion-header>
 
-  <button style="width: 100%; height:50px;" (click)="scanNetworks()">scan</button>
+  <button style="width: 100%; height:50px;" (click)="scan()">scan</button>
 
   <pre>
   <code>
      {{ (scanResult | async) | json }}
   </code>
 </pre>
+
 </ion-content>
