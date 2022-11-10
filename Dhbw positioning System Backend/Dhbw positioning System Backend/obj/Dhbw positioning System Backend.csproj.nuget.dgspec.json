@@ -58,6 +58,10 @@
               "target": "Package",
               "version": "[3.1.30, )"
             },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[3.1.5, )"
+            },
             "Stub.System.Data.SQLite.Core.NetStandard": {
               "target": "Package",
               "version": "[1.0.116, )"

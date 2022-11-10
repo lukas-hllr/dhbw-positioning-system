@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace Dhbw_positioning_System_Backend
 {
@@ -19,7 +20,9 @@ namespace Dhbw_positioning_System_Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DhbwPositioningSystemDBContext>(options => options.UseSqlite("DhbwPositioningSystemDB.sqlite"));
+
+            string connectionString = System.Environment.CurrentDirectory+ "\\DhbwPositioningSystemDB.db";
+            services.AddDbContext<DhbwPositioningSystemDBContext>(options => options.UseSqlite("Data Source = "+connectionString));
             services.AddControllers();
         }
 
