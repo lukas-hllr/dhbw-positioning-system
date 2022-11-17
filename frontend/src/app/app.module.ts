@@ -8,11 +8,12 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {WifiWizard2} from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
 import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule],
   providers: [
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     WifiWizard2,

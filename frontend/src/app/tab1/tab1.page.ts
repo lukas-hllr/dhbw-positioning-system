@@ -3,8 +3,7 @@ import {WifiWizard2} from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
 import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 import {BehaviorSubject} from 'rxjs';
 import {MeassurementModel} from '../model/meassurement.model';
-import {Geoposition} from "@awesome-cordova-plugins/geolocation";
-import {returnDownBack} from "ionicons/icons";
+import {Geoposition} from '@awesome-cordova-plugins/geolocation';
 
 @Component({
   selector: 'app-tab1',
