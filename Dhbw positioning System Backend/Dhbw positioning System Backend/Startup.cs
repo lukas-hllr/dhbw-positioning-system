@@ -46,6 +46,7 @@ namespace Dhbw_positioning_System_Backend
             {
                 endpoints.MapControllers();
             });
+            
         }
     }
 }

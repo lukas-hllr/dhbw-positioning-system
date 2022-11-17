@@ -32,14 +32,14 @@ namespace Dhbw_positioning_System_Backend.Controllers
         {
             var e = _context.Measurement.Add(new Measurement()
             {
-                MeasurementId = 2,//TODO Autogenerate
                 Date = measurement.Date,
                 Latitude = measurement.Latitude,
                 Longitude = measurement.Longitude,
                 NetworkMeasurement = measurement.NetworkMeasurement
             });
+
             _context.SaveChanges();
-            return CreatedAtAction("asd",e.Entity );
+            return Ok();
         }
 
         // PUT api/<MeasurementController>/5

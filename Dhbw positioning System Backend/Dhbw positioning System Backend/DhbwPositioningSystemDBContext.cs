@@ -61,7 +61,7 @@ namespace Dhbw_positioning_System_Backend
             {
                 entity.Property(e => e.MeasurementId)
                     .HasColumnName("measurement_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Date).HasColumnName("date");
 
