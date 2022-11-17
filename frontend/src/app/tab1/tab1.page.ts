@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {WifiWizard2} from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
 import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 import {BehaviorSubject} from 'rxjs';
-import {Meassurement} from '../model/meassurement.model';
+import {MeassurementModel} from '../model/meassurement.model';
 import {Geoposition} from "@awesome-cordova-plugins/geolocation";
 import {returnDownBack} from "ionicons/icons";
 
@@ -13,7 +13,7 @@ import {returnDownBack} from "ionicons/icons";
 })
 export class Tab1Page implements OnInit {
 
-  scanResult: BehaviorSubject<Meassurement | string>;
+  scanResult: BehaviorSubject<MeassurementModel | string>;
 
   wifiScanResult: BehaviorSubject<any>;
   posResultHighAcc: BehaviorSubject<{latitude: number; longitude: number; altitude: number; accuracy: number} | {error: any}>;
@@ -48,16 +48,13 @@ export class Tab1Page implements OnInit {
       });
     await this.geolocation.getCurrentPosition( {enableHighAccuracy: false, maximumAge: 0})
       .then(result => posL = result)
-      .catch(error => {return Promise.reject(error)});
+      .catch(error => Promise.reject(error));
     await new Promise(resolve => setTimeout(resolve, 1000));
     await this.geolocation.getCurrentPosition( {enableHighAccuracy: true, maximumAge: 0})
       .then(result => posH = result)
-      .catch(error => {return Promise.reject(error)});
+      .catch(error => Promise.reject(error));
 
-    this.scanResult.next(new Meassurement(scanR, posL, posH));
-
-    // await this.scanNetworks();
-    // await this.updatePos();
+    this.scanResult.next(new MeassurementModel(scanR, posL, posH));
   }
 
   public async scanNetworks(): Promise<any> {

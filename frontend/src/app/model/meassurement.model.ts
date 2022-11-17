@@ -1,28 +1,16 @@
 import {Geoposition} from '@awesome-cordova-plugins/geolocation';
+import {ApScanItemModel} from './ap-scan-item.model';
+import {PositionModel} from './position.model';
 
 
 
-export class Meassurement {
+export class MeassurementModel {
 
-  public meassurements: {
-    SSID: string;
-    MAC: string;
-    level: number;
-  }[];
+  public meassurements: ApScanItemModel[];
 
-  public positionLowAccuracy: {
-    latitude: number;
-    longitude: number;
-    altitude: number;
-    accuracy: number;
-  };
+  public positionLowAccuracy: PositionModel;
 
-  public positionHighAccuracy: {
-    latitude: number;
-    longitude: number;
-    altitude: number;
-    accuracy: number;
-  };
+  public positionHighAccuracy: PositionModel;
 
   public timestamp: Date;
 
