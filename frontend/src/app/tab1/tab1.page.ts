@@ -4,6 +4,8 @@ import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 import {BehaviorSubject} from 'rxjs';
 import {MeassurementModel} from '../model/meassurement.model';
 import {Geoposition} from '@awesome-cordova-plugins/geolocation';
+import {StorageService} from '../services/storage-service/storage.service';
+import {ApiService} from '../services/api-service/api.service';
 
 @Component({
   selector: 'app-tab1',
@@ -12,15 +14,21 @@ import {Geoposition} from '@awesome-cordova-plugins/geolocation';
 })
 export class Tab1Page implements OnInit {
 
-  scanResult: BehaviorSubject<MeassurementModel | string>;
+  scanResult: BehaviorSubject<MeassurementModel>;
 
   wifiScanResult: BehaviorSubject<any>;
-  posResultHighAcc: BehaviorSubject<{latitude: number; longitude: number; altitude: number; accuracy: number} | {error: any}>;
-  posResultLowAcc: BehaviorSubject<{latitude: number; longitude: number; altitude: number; accuracy: number} | {error: any}>;
+  posResultHighAcc: BehaviorSubject<{ latitude: number; longitude: number; altitude: number; accuracy: number } | { error: any }>;
+  posResultLowAcc: BehaviorSubject<{ latitude: number; longitude: number; altitude: number; accuracy: number } | { error: any }>;
+
+  storedMeassurements: MeassurementModel[];
+
+  latestFailed: boolean;
 
   constructor(
     public wifiWizard: WifiWizard2,
     private geolocation: Geolocation,
+    private storageService: StorageService,
+    private apiService: ApiService,
   ) {
   }
 
@@ -32,6 +40,14 @@ export class Tab1Page implements OnInit {
     this.posResultLowAcc = new BehaviorSubject(null);
 
     await this.wifiWizard.requestPermission();
+
+    this.storageService.get('meassurements').then(m => {
+      if (m) {
+        this.storedMeassurements = m;
+      } else {
+        this.storedMeassurements = [];
+      }
+    });
   }
 
   public async scan(): Promise<void> {
@@ -45,15 +61,17 @@ export class Tab1Page implements OnInit {
         this.scanResult.next(error);
         return Promise.reject(error);
       });
-    await this.geolocation.getCurrentPosition( {enableHighAccuracy: false, maximumAge: 0})
+    await this.geolocation.getCurrentPosition({enableHighAccuracy: false, maximumAge: 0})
       .then(result => posL = result)
       .catch(error => Promise.reject(error));
     await new Promise(resolve => setTimeout(resolve, 1000));
-    await this.geolocation.getCurrentPosition( {enableHighAccuracy: true, maximumAge: 0})
+    await this.geolocation.getCurrentPosition({enableHighAccuracy: true, maximumAge: 0})
       .then(result => posH = result)
       .catch(error => Promise.reject(error));
 
-    this.scanResult.next(new MeassurementModel(scanR, posL, posH));
+    const m = new MeassurementModel(scanR, posL, posH);
+    this.scanResult.next(m);
+    this.saveMeassurement(m);
   }
 
   public async scanNetworks(): Promise<any> {
@@ -65,7 +83,7 @@ export class Tab1Page implements OnInit {
   }
 
   public async updatePos(): Promise<void> {
-    await this.geolocation.getCurrentPosition( {enableHighAccuracy: false, maximumAge: 0}).then(result => {
+    await this.geolocation.getCurrentPosition({enableHighAccuracy: false, maximumAge: 0}).then(result => {
       this.posResultLowAcc.next({
         latitude: result.coords.latitude,
         longitude: result.coords.latitude,
@@ -80,7 +98,7 @@ export class Tab1Page implements OnInit {
 
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    await this.geolocation.getCurrentPosition( {enableHighAccuracy: true, maximumAge: 0}).then(result => {
+    await this.geolocation.getCurrentPosition({enableHighAccuracy: true, maximumAge: 0}).then(result => {
       this.posResultHighAcc.next({
         latitude: result.coords.latitude,
         longitude: result.coords.latitude,
@@ -92,6 +110,26 @@ export class Tab1Page implements OnInit {
     }).catch(error => {
       this.posResultHighAcc.next({error});
     });
+  }
+
+  public send(): void {
+    if (this.scanResult.getValue() instanceof MeassurementModel) {
+      this.apiService.writeMeassurement(this.scanResult.getValue() as MeassurementModel);
+    }
+  }
+
+  private saveMeassurement(m: MeassurementModel): void {
+    const newStoredMeassurements: MeassurementModel[] = [m];
+
+    for (let i = 0; i < 9; i++) {
+      if (this.storedMeassurements[i]) {
+        newStoredMeassurements[i + 1] = this.storedMeassurements[i];
+      }
+    }
+
+    this.storageService.set('meassurements', newStoredMeassurements);
+    this.storedMeassurements = newStoredMeassurements;
+    console.log(this.storedMeassurements);
   }
 
 }
