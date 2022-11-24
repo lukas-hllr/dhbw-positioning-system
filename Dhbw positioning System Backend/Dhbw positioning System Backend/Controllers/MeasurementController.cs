@@ -42,10 +42,19 @@ namespace Dhbw_positioning_System_Backend.Controllers
             return Ok();
         }
 
+        //POST /Measurement/newData
+        [HttpPost("new")]
+        public ActionResult PostNew(DataSet dataset)
+        {
+            
+            return Ok();
+        }
+
         // PUT api/<MeasurementController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
+
         }
 
         // DELETE api/<MeasurementController>/5
