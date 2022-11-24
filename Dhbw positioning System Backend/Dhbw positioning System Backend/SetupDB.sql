@@ -3,6 +3,12 @@ This Document is used to setup the SQLite Database used for the DHBWPS project.
 It will delete all existing tables and replace them with new and empty tables.
 Use this command in Windows Powershell to renew the DB
 cat .\SetupDB.sql | sqlite3 .\DhbwPositioningSystemDB.db
+
+Scaffolding in PM like this:
+"C:\\Users\\lneumann\\source\\repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\DhbwPositioningSystemDB.db"
+Scaffold-DbContext "DataSource=C:\\Users\\lneumann\\source\\repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\DhbwPositioningSystemDB.db" Microsoft.EntityFrameworkCore.Sqlite 
+Dont forget to change Values generated never to on Add!!!
+
 */
 
 DROP TABLE IF EXISTS Measurement;
@@ -40,6 +46,6 @@ measured_strength real,
 measurement_id integer NOT NULL, 
 mac_address text NOT NULL,
 FOREIGN KEY (measurement_id) REFERENCES Measurement(measurement_id)
-FOREIGN KEY (mac_address) REFERENCES Acess_Point(mac_address)
+FOREIGN KEY (mac_address) REFERENCES Access_Point(mac_address)
 );
 

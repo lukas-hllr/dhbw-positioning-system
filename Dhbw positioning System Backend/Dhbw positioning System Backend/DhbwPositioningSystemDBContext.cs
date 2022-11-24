@@ -29,7 +29,7 @@ namespace Dhbw_positioning_System_Backend
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlite("Filename=DhbwPositioningSystemDB.sqlite");
+                optionsBuilder.UseSqlite("Filename=DhbwPositioningSystemDB.db");
             }
         }
 
@@ -60,14 +60,17 @@ namespace Dhbw_positioning_System_Backend
             modelBuilder.Entity<Measurement>(entity =>
             {
                 entity.Property(e => e.MeasurementId)
-                    .HasColumnName("measurement_id")
-                    .ValueGeneratedOnAdd();
+                    .HasColumnName("measurement_id").ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Date).HasColumnName("date");
 
-                entity.Property(e => e.Latitude).HasColumnName("latitude");
+                entity.Property(e => e.LatitudeHighAccuracy).HasColumnName("latitudeHighAccuracy");
 
-                entity.Property(e => e.Longitude).HasColumnName("longitude");
+                entity.Property(e => e.LatitudeLowAccuracy).HasColumnName("latitudeLowAccuracy");
+
+                entity.Property(e => e.LongitudeHighAccuracy).HasColumnName("longitudeHighAccuracy");
+
+                entity.Property(e => e.LongitudeLowAccuracy).HasColumnName("longitudeLowAccuracy");
             });
 
             modelBuilder.Entity<NetworkMeasurement>(entity =>
@@ -76,7 +79,7 @@ namespace Dhbw_positioning_System_Backend
 
                 entity.Property(e => e.NetworkMeasurementId)
                     .HasColumnName("network_measurement_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.MacAddress)
                     .IsRequired()
@@ -85,6 +88,8 @@ namespace Dhbw_positioning_System_Backend
                 entity.Property(e => e.MeasuredStrength).HasColumnName("measured_strength");
 
                 entity.Property(e => e.MeasurementId).HasColumnName("measurement_id");
+
+                entity.Property(e => e.NetworkSsid).HasColumnName("network_SSID");
 
                 entity.HasOne(d => d.Measurement)
                     .WithMany(p => p.NetworkMeasurement)
@@ -98,7 +103,7 @@ namespace Dhbw_positioning_System_Backend
 
                 entity.Property(e => e.RouterTypeId)
                     .HasColumnName("router_type_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name).HasColumnName("name");
 
