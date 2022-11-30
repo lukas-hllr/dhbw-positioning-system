@@ -1,0 +1,19 @@
+.map-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#map {
+  height: 100%;
+}
+
+#refreshButton {
+  position: absolute;
+  bottom: 30px;
+  right: 15px;
+  padding: 10px;
+  z-index: 400;
+}

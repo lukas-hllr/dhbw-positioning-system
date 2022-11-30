@@ -4,6 +4,7 @@
 
 /.vs
 .vs/
+.vscode
 .suo
 /Dhbw positioning System Backend/Dhbw positioning System Backend/bin
 /Dhbw positioning System Backend/Dhbw positioning System Backend/obj

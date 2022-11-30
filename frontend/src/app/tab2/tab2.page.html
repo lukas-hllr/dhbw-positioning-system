@@ -1,5 +1,8 @@
-
 <ion-content [fullscreen]="true">
-
-  <app-map></app-map>
+  <div class="map-container">
+    <div id="map"></div>
+    <button mat-fab id="refreshButton" color="primary" (click)="refresh()">
+      <mat-icon>my_location</mat-icon>
+    </button>
+  </div>
 </ion-content>

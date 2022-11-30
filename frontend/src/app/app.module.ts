@@ -9,8 +9,8 @@ import {AppComponent} from './app.component';
 import {WifiWizard2} from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
 import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {IonicStorageModule} from "@ionic/storage-angular";
-import {HttpClientModule} from "@angular/common/http";
+import {IonicStorageModule} from '@ionic/storage-angular';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
