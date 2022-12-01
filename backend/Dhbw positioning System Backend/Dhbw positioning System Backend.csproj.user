@@ -4,5 +4,10 @@
     <Controller_SelectedScaffolderID>ApiControllerWithActionsScaffolder</Controller_SelectedScaffolderID>
     <Controller_SelectedScaffolderCategoryPath>root/Common/Api</Controller_SelectedScaffolderCategoryPath>
     <WebStackScaffolding_ControllerDialogWidth>650,4</WebStackScaffolding_ControllerDialogWidth>
+    <ActiveDebugProfile>Dhbw_positioning_System_Backend</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\lneumann\source\repos\dhbw-positioning-system\Dhbw positioning System Backend\Dhbw positioning System Backend\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

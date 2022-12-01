@@ -2,15 +2,23 @@
 This Document is used to setup the SQLite Database used for the DHBWPS project.
 It will delete all existing tables and replace them with new and empty tables.
 Use this command in Windows Powershell to renew the DB
-cat .\SetupDB.sql | sqlite3 .\DhbwPositioningSystemDB.sqlite
+cat .\SetupDB.sql | sqlite3 .\DhbwPositioningSystemDB.db
+
+Scaffolding in PM like this:
+"C:\\Users\\lneumann\\source\\repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\DhbwPositioningSystemDB.db"
+Scaffold-DbContext "DataSource=C:\\Users\\lneumann\\source\\repos\\dhbw-positioning-system\\Dhbw positioning System Backend\\Dhbw positioning System Backend\\DhbwPositioningSystemDB.db" Microsoft.EntityFrameworkCore.Sqlite 
+Dont forget to change Values generated never to on Add!!!
+
 */
 
 DROP TABLE IF EXISTS Measurement;
 CREATE TABLE Measurement(
 measurement_id integer primary key autoincrement,
 date text,
-longitude real,
-latitude real
+longitudeHighAccuracy real,
+latitudeHighAccuracy real,
+longitudeLowAccuracy real,
+latitudeLowAccuracy real
 );
 
 DROP TABLE IF EXISTS Router_Type;
@@ -33,10 +41,11 @@ FOREIGN KEY (router_type_id) REFERENCES Router_Type(router_type_id)
 DROP TABLE IF EXISTS Network_Measurement;
 CREATE TABLE Network_Measurement(
 network_measurement_id integer primary key autoincrement,
+network_SSID text,
 measured_strength real,
 measurement_id integer NOT NULL, 
 mac_address text NOT NULL,
 FOREIGN KEY (measurement_id) REFERENCES Measurement(measurement_id)
-FOREIGN KEY (mac_address) REFERENCES Acess_Point(mac_address)
+FOREIGN KEY (mac_address) REFERENCES Access_Point(mac_address)
 );
 

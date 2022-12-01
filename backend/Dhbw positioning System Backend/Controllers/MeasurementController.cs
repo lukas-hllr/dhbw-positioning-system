@@ -33,11 +33,38 @@ namespace Dhbw_positioning_System_Backend.Controllers
             var e = _context.Measurement.Add(new Measurement()
             {
                 Date = measurement.Date,
-                Latitude = measurement.Latitude,
-                Longitude = measurement.Longitude,
+                LatitudeHighAccuracy = measurement.LatitudeHighAccuracy,
+                LongitudeHighAccuracy = measurement.LongitudeHighAccuracy,
                 NetworkMeasurement = measurement.NetworkMeasurement
             });
 
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        //POST /Measurement/new
+        [HttpPost("new")]
+        public ActionResult PostNew(DataSet dataset)
+        {
+            var mID = _context.Measurement.Add(new Measurement()
+            {
+                LongitudeHighAccuracy = dataset.PositionHighAccuracy.Longitude,
+                LatitudeHighAccuracy = dataset.PositionHighAccuracy.Latitude,
+                LongitudeLowAccuracy = dataset.PositionLowAccuracy.Longitude,
+                LatitudeLowAccuracy = dataset.PositionLowAccuracy.Latitude,
+                Date = dataset.Timestamp
+            }).Entity;
+            _context.SaveChanges();
+            foreach (var nw in dataset.Measurements)
+            {
+                _context.NetworkMeasurement.Add(new NetworkMeasurement()
+                {
+                    MeasurementId = mID.MeasurementId,
+                    MacAddress = nw.MAC,
+                    NetworkSsid = nw.SSID,
+                    MeasuredStrength = nw.Level,
+                });
+            }
             _context.SaveChanges();
             return Ok();
         }
@@ -46,6 +73,7 @@ namespace Dhbw_positioning_System_Backend.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
+
         }
 
         // DELETE api/<MeasurementController>/5

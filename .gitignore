@@ -2,13 +2,10 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/backend/_ReSharper.Caches
 /.vs
 .vs/
-.vscode
-.idea
 .suo
-/backend/Dhbw positioning System Backend/bin
-/backend/Dhbw positioning System Backend/obj
-/backend/Dhbw positioning System Backend/out
-/backend/Dhbw positioning System Backend.sln.DotSettings.user
+.pubxml
+.user
+/Dhbw positioning System Backend/Dhbw positioning System Backend/bin
+/Dhbw positioning System Backend/Dhbw positioning System Backend/obj

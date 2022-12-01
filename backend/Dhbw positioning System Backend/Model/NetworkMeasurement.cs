@@ -10,6 +10,7 @@ namespace Dhbw_positioning_System_Backend
     public partial class NetworkMeasurement
     {
         public long NetworkMeasurementId { get; set; }
+        public string NetworkSsid { get; set; }
         public double? MeasuredStrength { get; set; }
         public long MeasurementId { get; set; }
         public string MacAddress { get; set; }
