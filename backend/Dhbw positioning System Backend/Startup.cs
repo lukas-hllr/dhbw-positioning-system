@@ -21,7 +21,7 @@ namespace Dhbw_positioning_System_Backend
         public void ConfigureServices(IServiceCollection services)
         {
 
-            string connectionString = System.Environment.CurrentDirectory+ "\\DhbwPositioningSystemDB.db";
+            string connectionString = System.Environment.CurrentDirectory+ "/DhbwPositioningSystemDB.db";
             services.AddDbContext<DhbwPositioningSystemDBContext>(options => options.UseSqlite("Data Source = "+connectionString));
             services.AddControllers();
         }
