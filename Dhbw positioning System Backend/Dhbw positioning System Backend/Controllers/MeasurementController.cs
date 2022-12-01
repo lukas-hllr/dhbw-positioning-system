@@ -53,12 +53,13 @@ namespace Dhbw_positioning_System_Backend.Controllers
                 LongitudeLowAccuracy = dataset.PositionLowAccuracy.Longitude,
                 LatitudeLowAccuracy = dataset.PositionLowAccuracy.Latitude,
                 Date = dataset.Timestamp
-            }).Entity.MeasurementId;
+            }).Entity;
+            _context.SaveChanges();
             foreach (var nw in dataset.Measurements)
             {
                 _context.NetworkMeasurement.Add(new NetworkMeasurement()
                 {
-                    MeasurementId = mID,
+                    MeasurementId = mID.MeasurementId,
                     MacAddress = nw.MAC,
                     NetworkSsid = nw.SSID,
                     MeasuredStrength = nw.Level,
