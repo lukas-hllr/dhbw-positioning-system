@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Debug
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Debug</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <button style="width: 100%; height:50px; border: solid 1px black" (click)="scan()">scan</button>
+  <button style="width: 100%; height:50px; border: solid 1px black" [disabled]="latestFailed" (click)="send()">send latest</button>
+
+  <mat-accordion>
+
+    <mat-expansion-panel *ngFor="let m of storedMeassurements" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{m.meassurements.length + ' APs'}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{m.timestamp | date:'MMM d, y, H:mm:ss'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <pre>
+  <code>
+     {{ m | json }}
+  </code>
+</pre>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+
+</ion-content>
