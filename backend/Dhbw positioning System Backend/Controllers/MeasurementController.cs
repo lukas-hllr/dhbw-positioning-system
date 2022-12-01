@@ -42,7 +42,7 @@ namespace Dhbw_positioning_System_Backend.Controllers
             return Ok();
         }
 
-        //POST /Measurement/newData
+        //POST /Measurement/new
         [HttpPost("new")]
         public ActionResult PostNew(DataSet dataset)
         {
