@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Dhbw_positioning_System_Backend.Controllers
+namespace Dhbw_positioning_System_Backend.Model
 {
     public class DataSet
     {

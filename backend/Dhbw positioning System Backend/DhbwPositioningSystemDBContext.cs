@@ -1,4 +1,5 @@
 ﻿using System;
+using Dhbw_positioning_System_Backend.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
