@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
+using Dhbw_positioning_System_Backend.Model;
+using Newtonsoft.Json;
+using NuGet.Protocol;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,26 +31,26 @@ namespace Dhbw_positioning_System_Backend.Controllers
         }
 
         // POST api/<MeasurementController>
-        [HttpPost]
-        public ActionResult<Measurement> Post(Measurement measurement)
-        {
-            var e = _context.Measurement.Add(new Measurement()
-            {
-                Date = measurement.Date,
-                LatitudeHighAccuracy = measurement.LatitudeHighAccuracy,
-                LongitudeHighAccuracy = measurement.LongitudeHighAccuracy,
-                NetworkMeasurement = measurement.NetworkMeasurement
-            });
-
-            _context.SaveChanges();
-            return Ok();
-        }
+        // [HttpPost]
+        // public ActionResult<Measurement> Post(Measurement measurement)
+        // {
+        //     var e = _context.Measurement.Add(new Measurement()
+        //     {
+        //         Date = measurement.Date,
+        //         LatitudeHighAccuracy = measurement.LatitudeHighAccuracy,
+        //         LongitudeHighAccuracy = measurement.LongitudeHighAccuracy,
+        //         NetworkMeasurement = measurement.NetworkMeasurement
+        //     });
+        //
+        //     _context.SaveChanges();
+        //     return Ok();
+        // }
 
         //POST /Measurement/new
         [HttpPost("new")]
-        public ActionResult PostNew(DataSet dataset)
+        public HttpResponseMessage PostNew(DataSet dataset)
         {
-            var mID = _context.Measurement.Add(new Measurement()
+            var mId = _context.Measurement.Add(new Measurement()
             {
                 LongitudeHighAccuracy = dataset.PositionHighAccuracy.Longitude,
                 LatitudeHighAccuracy = dataset.PositionHighAccuracy.Latitude,
@@ -59,27 +63,27 @@ namespace Dhbw_positioning_System_Backend.Controllers
             {
                 _context.NetworkMeasurement.Add(new NetworkMeasurement()
                 {
-                    MeasurementId = mID.MeasurementId,
+                    MeasurementId = mId.MeasurementId,
                     MacAddress = nw.MAC,
                     NetworkSsid = nw.SSID,
                     MeasuredStrength = nw.Level,
                 });
             }
             _context.SaveChanges();
-            return Ok();
+            //Set content of ResponseMessage?
+            return new HttpResponseMessage(HttpStatusCode.Created);
         }
-
-        // PUT api/<MeasurementController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-
-        }
-
-        // DELETE api/<MeasurementController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        // // PUT api/<MeasurementController>/5
+        // [HttpPut("{id}")]
+        // public void Put(int id, [FromBody] string value)
+        // {
+        //
+        // }
+        //
+        // // DELETE api/<MeasurementController>/5
+        // [HttpDelete("{id}")]
+        // public void Delete(int id)
+        // {
+        // }
     }
 }
