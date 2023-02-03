@@ -41,7 +41,6 @@ namespace Dhbw_positioning_System_Backend.Controllers
         //         LongitudeHighAccuracy = measurement.LongitudeHighAccuracy,
         //         NetworkMeasurement = measurement.NetworkMeasurement
         //     });
-        //
         //     _context.SaveChanges();
         //     return Ok();
         // }
