@@ -3,9 +3,12 @@
 ################################################################################
 
 /.vs
+.vscode
 .vs/
+.idea
 .suo
 .pubxml
 .user
-/Dhbw positioning System Backend/Dhbw positioning System Backend/bin
-/Dhbw positioning System Backend/Dhbw positioning System Backend/obj
+/backend/Dhbw positioning System Backend/bin
+/backend/Dhbw positioning System Backend/obj
+/backend/out
