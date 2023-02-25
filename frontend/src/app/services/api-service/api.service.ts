@@ -4,8 +4,7 @@ import {MeassurementModel} from '../../model/meassurement.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {map} from 'rxjs/operators';
-import {PositionModel} from "../../model/position.model";
-import {ApScanItemModel} from "../../model/ap-scan-item.model";
+import {ApScanItemModel} from '../../model/ap-scan-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +37,9 @@ export class ApiService {
       }));
   }
 
-  public getPosition(scan: ApScanItemModel): Observable<PositionModel> {
+  public getPosition(scan: ApScanItemModel): Observable<any> {
     this.$sending.next(true);
-    return this.http.get<PositionModel>(`${environment.apiUrl}/position`, scan)
+    return this.http.get<any>(`${environment.apiUrl}/position`)
       .pipe(map(p => {
         this.$sending.next(false);
         return p;

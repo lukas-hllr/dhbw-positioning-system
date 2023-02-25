@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using Dhbw_positioning_System_Backend.Model;
-using Newtonsoft.Json;
-using NuGet.Protocol;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
