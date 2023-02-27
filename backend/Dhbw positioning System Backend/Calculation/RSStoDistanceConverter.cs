@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dhbw_positioning_System_Backend;
+namespace Dhbw_positioning_System_Backend.Calculation;
 
 public class RSStoDistanceConverter
 {
