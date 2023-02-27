@@ -5,7 +5,7 @@ namespace Dhbw_positioning_System_Backend.Calculation;
 
 public static class Trilateration
 {
-    public static GeoCoordinate IterativeIntersection(GeoCoordinate[] positions, double[] distances, double epsilon = 2)
+    public static GeoCoordinate IterativeIntersection(GeoCoordinate[] positions, double[] distances, double epsilon = 2, int maxIterations = 10000)
     {
         // Check that the number of positions and distances are the same
         if (positions.Length != distances.Length)
@@ -22,9 +22,11 @@ public static class Trilateration
         lon /= positions.Length;
         GeoCoordinate position = new GeoCoordinate(lat, lon);
 
-        // Iterate until the position estimate converges
-        while (true)
+        // Iterate until the position estimate converges (or maxIterations)
+        int iteration = 0;
+        while (iteration < maxIterations)
         {
+            iteration++;
             // Calculate the distances from the current estimate to each reference point
             double[] currentDistances = new double[distances.Length];
             for (int i = 0; i < distances.Length; i++)
