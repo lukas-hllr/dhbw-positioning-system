@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {MeassurementModel} from '../../model/meassurement.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {map} from 'rxjs/operators';
 import {ApScanItemModel} from '../../model/ap-scan-item.model';
+import {PositionModel} from "../../model/position.model";
 
 @Injectable({
   providedIn: 'root'
@@ -37,9 +38,9 @@ export class ApiService {
       }));
   }
 
-  public getPosition(scan: ApScanItemModel): Observable<any> {
+  public getPosition(scan: ApScanItemModel[]): Observable<PositionModel> {
     this.$sending.next(true);
-    return this.http.get<any>(`${environment.apiUrl}/position`)
+    return this.http.post<PositionModel>(`${environment.apiUrl}/position`, scan)
       .pipe(map(p => {
         this.$sending.next(false);
         return p;

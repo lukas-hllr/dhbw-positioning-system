@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://0.0.0.0/'
+  apiUrl: 'http://position.it.dh-karlsruhe.de'
 };
 
 /*
