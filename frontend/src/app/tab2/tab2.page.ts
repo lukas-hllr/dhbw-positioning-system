@@ -1,6 +1,9 @@
 import {Component, AfterViewInit} from '@angular/core';
 import * as L from 'leaflet';
 import * as levels_geojson from '../../assets/map-levels/2og_cal.json';
+import {ApiService} from "../services/api-service/api.service";
+import {first} from "rxjs/operators";
+import {PositionModel} from "../model/position.model";
 
 @Component({
   selector: 'app-tab2',
@@ -9,8 +12,11 @@ import * as levels_geojson from '../../assets/map-levels/2og_cal.json';
 })
 export class Tab2Page implements AfterViewInit {
   private map;
+  private position;
+  private locationMarker;
+  private locationAccuracy;
 
-  constructor() {
+  constructor(private apiService: ApiService) {
   }
 
   ngAfterViewInit(): void {
@@ -44,8 +50,20 @@ export class Tab2Page implements AfterViewInit {
     }, 0);
   }
 
-  refresh(): void {
-    //bla
+  private refresh(): void {
+    this.apiService.getPosition([]).pipe(first()).subscribe(
+      position => this.setPosMarker(position)
+    );
+  }
+
+  private setPosMarker(pos: PositionModel): void {
+    if (this.locationMarker) this.map.removeLayer(this.locationMarker);
+    if (this.locationAccuracy) this.map.removeLayer(this.locationAccuracy);
+
+    this.locationMarker = L.marker([pos.latitude, pos.longitude]).addTo(this.map)
+      .bindPopup('You are within ' + pos.accuracy + ' meters from this point').openPopup();
+
+    this.locationAccuracy = L.circle([pos.latitude, pos.longitude], pos.accuracy/2).addTo(this.map);
   }
 
 }
