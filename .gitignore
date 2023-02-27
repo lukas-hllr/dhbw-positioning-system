@@ -11,4 +11,6 @@
 .user
 /backend/Dhbw positioning System Backend/bin
 /backend/Dhbw positioning System Backend/obj
+/backend/backend-test/bin
+/backend/backend-test/obj
 /backend/out

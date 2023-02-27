@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
+using Dhbw_positioning_System_Backend.Calculation;
 using Dhbw_positioning_System_Backend.Model;
-using Newtonsoft.Json;
-using NuGet.Protocol;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,7 +28,7 @@ namespace Dhbw_positioning_System_Backend.Controllers
         {
             return _context.Measurement.ToList();
         }
-
+        
         // POST api/<MeasurementController>
         // [HttpPost]
         // public ActionResult<Measurement> Post(Measurement measurement)
@@ -41,7 +40,6 @@ namespace Dhbw_positioning_System_Backend.Controllers
         //         LongitudeHighAccuracy = measurement.LongitudeHighAccuracy,
         //         NetworkMeasurement = measurement.NetworkMeasurement
         //     });
-        //
         //     _context.SaveChanges();
         //     return Ok();
         // }
