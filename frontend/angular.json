@@ -28,6 +28,11 @@
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/", // you may need to change this path, according to your files structure
+                "output": "./assets/leaflet"
               }
             ],
             "styles": [

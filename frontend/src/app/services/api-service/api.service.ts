@@ -40,7 +40,7 @@ export class ApiService {
 
   public getPosition(scan: ApScanItemModel[]): Observable<PositionModel> {
     this.$sending.next(true);
-    return this.http.post<PositionModel>(`${environment.apiUrl}/position`, scan)
+    return this.http.post<PositionModel>(`${environment.apiUrl}/location`, scan)
       .pipe(map(p => {
         this.$sending.next(false);
         return p;
