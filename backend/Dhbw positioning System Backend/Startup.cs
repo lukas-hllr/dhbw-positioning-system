@@ -21,14 +21,16 @@ namespace Dhbw_positioning_System_Backend
         {
 
             string connectionString = System.Environment.CurrentDirectory+ "/DhbwPositioningSystemDB.db";
+
+            services.AddMvc(x => x.EnableEndpointRouting = false);
             services.AddDbContext<DhbwPositioningSystemDBContext>(options => options.UseSqlite("Data Source = "+connectionString));
             services.AddControllers();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //TODO Enable CORS
 
             if (env.IsDevelopment())
             {
@@ -36,6 +38,11 @@ namespace Dhbw_positioning_System_Backend
             }
 
             //app.UseHttpsRedirection();
+
+            app.UseCors(options => options
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)); // allow any origin)
 
             app.UseRouting();
 
@@ -45,6 +52,8 @@ namespace Dhbw_positioning_System_Backend
             {
                 endpoints.MapControllers();
             });
+
+            app.UseMvc();
             
         }
     }
