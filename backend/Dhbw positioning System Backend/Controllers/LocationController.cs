@@ -27,10 +27,13 @@ namespace Dhbw_positioning_System_Backend.Controllers
 
         public ActionResult<Position> getLocation(IEnumerable<DataPoint> aps)
         {
+
+            List<DataPoint> aps_filtered = this.excludeDuplicates(aps);
+
             List<double> distances = new List<double>();
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
 
-            foreach (var ap in aps)
+            foreach (DataPoint ap in aps_filtered)
             {
                 AccessPoint correspondingAp = _context.AccessPoint.Find(
                     ap.MAC.Remove(16, 1).ToLower() + "0"
@@ -38,14 +41,14 @@ namespace Dhbw_positioning_System_Backend.Controllers
 
                 if (correspondingAp != null)
                 {
-                    distances.Add(RSSItoDistanceConverter.Convert(ap.Level));
+                    distances.Add(RSSItoDistanceConverter.Convert(ap));
                     coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
                 }
             }
 
             if (distances.Count<double>() < 3)
             {
-                return BadRequest("Trilateration requires at least 3 registered datapoints.");
+                return BadRequest("Trilateration requires at least 3 distinct and registered datapoints.");
             }
 
 
@@ -56,6 +59,29 @@ namespace Dhbw_positioning_System_Backend.Controllers
             );
             
             return new Position(result.Latitude, result.Longitude, -1, 1);
+        }
+
+        /*
+            Priorise 5GHz Networks and filter out
+            duplicate 2.4Ghz Networks
+        */
+        private List<DataPoint> excludeDuplicates(IEnumerable<DataPoint> aps){
+            aps = aps.OrderByDescending(ap => ap.SSID);
+
+            List<DataPoint> filtered = new List<DataPoint>();
+            List<string> macs = new List<string>();
+            
+            foreach (DataPoint ap in aps)
+            {
+                string current_mac = ap.MAC.Remove(16, 1).ToLower();
+
+                if (!macs.Contains(current_mac)){
+                    filtered.Add(ap);
+                    macs.Add(current_mac);
+                }
+            }
+
+            return filtered;
         }
     }
 }
