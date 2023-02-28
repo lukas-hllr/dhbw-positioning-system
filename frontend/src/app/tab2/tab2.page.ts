@@ -24,6 +24,7 @@ export class Tab2Page implements AfterViewInit {
   }
 
   private initMap(): void {
+    L.Icon.Default.imagePath = 'assets/leaflet/';
     this.map = L.map('map', {
       center: [49.027184, 8.385406],
       zoom: 19

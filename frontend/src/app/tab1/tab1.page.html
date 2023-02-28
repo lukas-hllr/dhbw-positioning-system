@@ -13,12 +13,12 @@
     </ion-toolbar>
   </ion-header>
 
-  <button style="width: 100%; height:50px; border: solid 1px black" (click)="scan()">scan</button>
-  <button style="width: 100%; height:50px; border: solid 1px black" [disabled]="latestFailed" (click)="send()">send latest</button>
+  <button style="width: 100%; height:50px; border: solid 1px black" (click)="this.apScanService.scan()">scan</button>
+  <button style="width: 100%; height:50px; border: solid 1px black" [disabled]="this.apScanService.latestFailed" (click)="this.apScanService.send()">send latest</button>
 
   <mat-accordion>
 
-    <mat-expansion-panel *ngFor="let m of storedMeassurements" hideToggle>
+    <mat-expansion-panel *ngFor="let m of this.apScanService.storedMeassurements" hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{m.meassurements.length + ' APs'}}
