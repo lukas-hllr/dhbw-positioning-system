@@ -8,7 +8,7 @@ public class RSSItoDistanceConverter
     private const double SignalPropagation24GHz = 3.0; //Usually between 2 and 4.3, has to be tested.  
     private const double SignalPropagation5GHz = 3.0; //Usually between 2 and 4.3, has to be tested.  
     private const double RssiAtOneMeter24GHz = -32; //Measured reference-RSSI at a distance of 1m  
-    private const double RssiAtOneMeter5GHz = -32; //Measured reference-RSSI at a distance of 1m  
+    private const double RssiAtOneMeter5GHz = -24; //Measured reference-RSSI at a distance of 1m  
     public static double Convert(DataPoint ap)
     {
         if(ap.SSID.Equals("DHBW-KA5")){
