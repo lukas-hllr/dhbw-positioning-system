@@ -9,8 +9,9 @@ namespace Dhbw_positioning_System_Backend.Model
     public partial class AccessPoint
     {
         public string MacAddress { get; set; }
-        public double? Longitude { get; set; }
-        public double? Latitude { get; set; }
+        // TODO: Coordinates NOT NULL
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
         public string Room { get; set; }
         public long RouterTypeId { get; set; }
 

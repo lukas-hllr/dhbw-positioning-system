@@ -15,8 +15,8 @@ DROP TABLE IF EXISTS Measurement;
 CREATE TABLE Measurement(
 measurement_id integer primary key autoincrement,
 date text,
-longitudeHighAccuracy real,
-latitudeHighAccuracy real,
+longitudeHighAccuracy real NOT NULL,
+latitudeHighAccuracy real NOT NULL,
 longitudeLowAccuracy real,
 latitudeLowAccuracy real
 );
@@ -31,9 +31,9 @@ range real
 DROP TABLE IF EXISTS Access_Point;
 CREATE TABLE Access_Point(
 mac_address text primary key,
-longitude real,
-latitude real,
-room text,
+longitude real NOT NULL,
+latitude real NOT NULL,
+room text NOT NULL,
 router_type_id integer NOT NULL, 
 FOREIGN KEY (router_type_id) REFERENCES Router_Type(router_type_id)
 );

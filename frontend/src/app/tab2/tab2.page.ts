@@ -4,6 +4,7 @@ import * as levels_geojson from '../../assets/map-levels/2og_cal.json';
 import {ApiService} from "../services/api-service/api.service";
 import {first} from "rxjs/operators";
 import {PositionModel} from "../model/position.model";
+import {ApScanService} from "../services/ap-scan-service/ap-scan.service";
 
 @Component({
   selector: 'app-tab2',
@@ -16,7 +17,7 @@ export class Tab2Page implements AfterViewInit {
   private locationMarker;
   private locationAccuracy;
 
-  constructor(private apiService: ApiService) {
+  constructor(private apiService: ApiService, private apScanService: ApScanService) {
   }
 
   ngAfterViewInit(): void {
@@ -24,6 +25,7 @@ export class Tab2Page implements AfterViewInit {
   }
 
   private initMap(): void {
+    L.Icon.Default.imagePath = 'assets/leaflet/';
     this.map = L.map('map', {
       center: [49.027184, 8.385406],
       zoom: 19
@@ -51,8 +53,13 @@ export class Tab2Page implements AfterViewInit {
   }
 
   private refresh(): void {
-    this.apiService.getPosition([]).pipe(first()).subscribe(
-      position => this.setPosMarker(position)
+    this.apScanService.scan().then(() => {
+        this.apiService.getPosition(
+          this.apScanService.scanResult.getValue().meassurements
+        ).pipe(first()).subscribe(
+          position => this.setPosMarker(position)
+        );
+      }
     );
   }
 
@@ -63,7 +70,7 @@ export class Tab2Page implements AfterViewInit {
     this.locationMarker = L.marker([pos.latitude, pos.longitude]).addTo(this.map)
       .bindPopup('You are within ' + pos.accuracy + ' meters from this point').openPopup();
 
-    this.locationAccuracy = L.circle([pos.latitude, pos.longitude], pos.accuracy/2).addTo(this.map);
+    this.locationAccuracy = L.circle([pos.latitude, pos.longitude], pos.accuracy / 2).addTo(this.map);
   }
 
 }
