@@ -24,7 +24,7 @@ public static class Trilateration
         GeoCoordinate estimatedPosition = new GeoCoordinate(lat, lon);
         double accuracy=9999, lastAccuracy=99999;
         // Iterate until the position estimate converges (Which happens when the error is not getting better)
-        while (GetAccuracyImprovement(accuracy,lastAccuracy)<epsilon)
+        while (GetAccuracyImprovement(accuracy,lastAccuracy)>epsilon)
         {
             // Calculate the distances from the current estimate to each reference point
             double[] calculatedDistances = GetCalculatedDistances(positions, estimatedPosition);
