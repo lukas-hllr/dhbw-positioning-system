@@ -50,22 +50,26 @@ namespace Dhbw_positioning_System_Backend.Controllers
         {
             var mId = _context.Measurement.Add(new Measurement()
             {
-                LongitudeHighAccuracy = dataset.PositionHighAccuracy.Longitude,
-                LatitudeHighAccuracy = dataset.PositionHighAccuracy.Latitude,
-                LongitudeLowAccuracy = dataset.PositionLowAccuracy.Longitude,
-                LatitudeLowAccuracy = dataset.PositionLowAccuracy.Latitude,
-                Date = dataset.Timestamp
+                LongitudeGroundTruth = dataset.PositionGroundTruth.Longitude,
+                LatitudeGroundTruth = dataset.PositionGroundTruth.Latitude,
+                LongitudeHighAccuracy = dataset.PositionHighAccuracy?.Longitude,
+                LatitudeHighAccuracy = dataset.PositionHighAccuracy?.Latitude,
+                LongitudeLowAccuracy = dataset.PositionLowAccuracy?.Longitude,
+                LatitudeLowAccuracy = dataset.PositionLowAccuracy?.Latitude,
+                Date = dataset.Timestamp,
+                Device = dataset.Device
             }).Entity;
             _context.SaveChanges();
             foreach (var nw in dataset.Measurements)
             {
-                _context.NetworkMeasurement.Add(new NetworkMeasurement()
+                var nm = new NetworkMeasurement()
                 {
                     MeasurementId = mId.MeasurementId,
                     MacAddress = nw.MAC,
                     NetworkSsid = nw.SSID,
                     MeasuredStrength = nw.Level,
-                });
+                };
+                _context.NetworkMeasurement.Add(nm);
             }
             _context.SaveChanges();
             //Set content of ResponseMessage?
