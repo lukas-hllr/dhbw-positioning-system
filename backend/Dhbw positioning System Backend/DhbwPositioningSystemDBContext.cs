@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Dhbw_positioning_System_Backend.Model;
 
+
 namespace Dhbw_positioning_System_Backend
 {
     public partial class DhbwPositioningSystemDBContext : DbContext
@@ -69,7 +70,8 @@ namespace Dhbw_positioning_System_Backend
             {
                 entity.Property(e => e.MeasurementId)
                     .HasColumnType("integer")
-                    .HasColumnName("measurement_id");
+                    .HasColumnName("measurement_id")
+                    .ValueGeneratedOnAdd();;
 
                 entity.Property(e => e.Date)
                     .IsRequired()
@@ -80,6 +82,8 @@ namespace Dhbw_positioning_System_Backend
                     .IsRequired()
                     .HasColumnName("device");
 
+                entity.Property(e => e.LatitudeGroundTruth).HasColumnName("latitudeGroundTruth");
+
                 entity.Property(e => e.LatitudeHighAccuracy)
                     .HasColumnType("real")
                     .HasColumnName("latitudeHighAccuracy");
@@ -87,6 +91,8 @@ namespace Dhbw_positioning_System_Backend
                 entity.Property(e => e.LatitudeLowAccuracy)
                     .HasColumnType("real")
                     .HasColumnName("latitudeLowAccuracy");
+
+                entity.Property(e => e.LongitudeGroundTruth).HasColumnName("longitudeGroundTruth");
 
                 entity.Property(e => e.LongitudeHighAccuracy)
                     .HasColumnType("real")
@@ -103,7 +109,8 @@ namespace Dhbw_positioning_System_Backend
 
                 entity.Property(e => e.NetworkMeasurementId)
                     .HasColumnType("integer")
-                    .HasColumnName("network_measurement_id");
+                    .HasColumnName("network_measurement_id")
+                    .ValueGeneratedOnAdd();;
 
                 entity.Property(e => e.MacAddress)
                     .IsRequired()
@@ -140,7 +147,8 @@ namespace Dhbw_positioning_System_Backend
 
                 entity.Property(e => e.RouterTypeId)
                     .HasColumnType("integer")
-                    .HasColumnName("router_type_id");
+                    .HasColumnName("router_type_id")
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name)
                     .IsRequired()

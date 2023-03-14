@@ -12,10 +12,13 @@ import {ApScanService} from "../services/ap-scan-service/ap-scan.service";
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page implements AfterViewInit {
+  public clickedPos;
   private map;
   private position;
   private locationMarker;
   private locationAccuracy;
+
+  private clickedMarker;
 
   constructor(private apiService: ApiService, private apScanService: ApScanService) {
   }
@@ -41,6 +44,16 @@ export class Tab2Page implements AfterViewInit {
 
     L.geoJSON(levels_geojson as any).addTo(this.map);
 
+    this.map.on('click', (e) => {
+      if (this.clickedMarker !== undefined) {
+        this.map.removeLayer(this.clickedMarker);
+      }
+      this.clickedMarker = L.marker(e.latlng).addTo(this.map);
+      this.clickedMarker._icon.classList.add("debugMarker");
+      this.clickedPos = e.latlng;
+      console.log(e.latlng);
+    });
+
     setTimeout(() => {
       this.map.invalidateSize();
     }, 0);
@@ -55,7 +68,7 @@ export class Tab2Page implements AfterViewInit {
   private refresh(): void {
     this.apScanService.scan().then(() => {
         this.apiService.getPosition(
-          this.apScanService.scanResult.getValue().meassurements
+          this.apScanService.scanResult.getValue().measurements
         ).pipe(first()).subscribe(
           position => this.setPosMarker(position)
         );
@@ -73,4 +86,8 @@ export class Tab2Page implements AfterViewInit {
     this.locationAccuracy = L.circle([pos.latitude, pos.longitude], pos.accuracy / 2).addTo(this.map);
   }
 
+  sendCurrentPos() {
+    const realPos = new PositionModel(this.clickedPos.lat, this.clickedPos.lng, 0, 0);
+    this.apScanService.send(realPos);
+  }
 }

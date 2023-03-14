@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
-import {MeassurementModel} from '../../model/meassurement.model';
+import {MeasurementModel} from '../../model/measurement.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {map} from 'rxjs/operators';
 import {ApScanItemModel} from '../../model/ap-scan-item.model';
 import {PositionModel} from "../../model/position.model";
+import {MeasurementBackendModel} from "../../model/measurement-backend.model";
 
 @Injectable({
   providedIn: 'root'
@@ -20,21 +21,21 @@ export class ApiService {
     this.$sending = new BehaviorSubject(false);
   }
 
-  public writeMeassurement(m: MeassurementModel): Observable<any> {
+  public writeMeasurement(m: MeasurementBackendModel): Observable<any> {
     this.$sending.next(true);
-    return this.http.post<any>(`${environment.apiUrl}/`, m)
-      .pipe(map(writtenMeassurement => {
+    return this.http.post<any>(`${environment.apiUrl}/measurement/new`, m)
+      .pipe(map(writtenMeasurement => {
         this.$sending.next(false);
-        return writtenMeassurement;
+        return writtenMeasurement;
       }));
   }
 
-  public getMeassurement(m: MeassurementModel): Observable<any> {
+  public getMeasurement(m: MeasurementModel): Observable<any> {
     this.$sending.next(true);
     return this.http.post<any>(`${environment.apiUrl}/`, m)
-      .pipe(map(writtenMeassurement => {
+      .pipe(map(writtenMeasurement => {
         this.$sending.next(false);
-        return writtenMeassurement;
+        return writtenMeasurement;
       }));
   }
 

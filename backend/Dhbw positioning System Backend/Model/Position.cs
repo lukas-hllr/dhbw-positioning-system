@@ -2,6 +2,7 @@
 {
     public class Position
     {
+        public Position(){}
         public Position(double lat, double lon, double alt, double acc){
             this.Latitude = lat;
             this.Longitude = lon;

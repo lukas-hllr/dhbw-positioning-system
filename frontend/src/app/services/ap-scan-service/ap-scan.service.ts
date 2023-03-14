@@ -1,24 +1,27 @@
 import {Injectable} from '@angular/core';
-import {MeassurementModel} from '../../model/meassurement.model';
+import {MeasurementModel} from '../../model/measurement.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {WifiWizard2} from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
 import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 import {StorageService} from '../storage-service/storage.service';
 import {Geoposition} from '@awesome-cordova-plugins/geolocation';
 import {ApiService} from "../api-service/api.service";
+import {first} from "rxjs/operators";
+import {MeasurementBackendModel} from "../../model/measurement-backend.model";
+import {PositionModel} from "../../model/position.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApScanService {
 
-  public scanResult: BehaviorSubject<MeassurementModel>;
+  public scanResult: BehaviorSubject<MeasurementModel>;
 
   public wifiScanResult: BehaviorSubject<any>;
   public posResultHighAcc: BehaviorSubject<{ latitude: number; longitude: number; altitude: number; accuracy: number } | { error: any }>;
   public posResultLowAcc: BehaviorSubject<{ latitude: number; longitude: number; altitude: number; accuracy: number } | { error: any }>;
 
-  public storedMeassurements: MeassurementModel[];
+  public storedMeasurements: MeasurementModel[];
 
   public latestFailed: boolean;
 
@@ -34,11 +37,11 @@ export class ApScanService {
     this.posResultHighAcc = new BehaviorSubject(null);
     this.posResultLowAcc = new BehaviorSubject(null);
 
-    this.storageService.get('meassurements').then(m => {
+    this.storageService.get('measurements').then(m => {
       if (m) {
-        this.storedMeassurements = m;
+        this.storedMeasurements = m;
       } else {
-        this.storedMeassurements = [];
+        this.storedMeasurements = [];
       }
     });
   }
@@ -62,9 +65,9 @@ export class ApScanService {
       .then(result => posH = result)
       .catch(error => Promise.reject(error));
 
-    const m = new MeassurementModel(scanR, posL, posH);
+    const m = new MeasurementModel(scanR, posL, posH);
     this.scanResult.next(m);
-    this.saveMeassurement(m);
+    this.saveMeasurement(m);
   }
 
   public async scanNetworks(): Promise<any> {
@@ -105,24 +108,27 @@ export class ApScanService {
     });
   }
 
-  public send(): void {
-    if (this.scanResult.getValue() instanceof MeassurementModel) {
-      this.apiService.writeMeassurement(this.scanResult.getValue() as MeassurementModel);
+  public send(realPos: PositionModel): void {
+    const scanResult = this.scanResult.getValue();
+    if (scanResult instanceof MeasurementModel) {
+      const scanBackend = new MeasurementBackendModel(scanResult, realPos);
+      console.log(scanBackend);
+      this.apiService.writeMeasurement(scanBackend).pipe(first()).subscribe();
     }
   }
 
-  private saveMeassurement(m: MeassurementModel): void {
-    const newStoredMeassurements: MeassurementModel[] = [m];
+  private saveMeasurement(m: MeasurementModel): void {
+    const newStoredMeasurements: MeasurementModel[] = [m];
 
     for (let i = 0; i < 9; i++) {
-      if (this.storedMeassurements[i]) {
-        newStoredMeassurements[i + 1] = this.storedMeassurements[i];
+      if (this.storedMeasurements[i]) {
+        newStoredMeasurements[i + 1] = this.storedMeasurements[i];
       }
     }
 
-    this.storageService.set('meassurements', newStoredMeassurements);
-    this.storedMeassurements = newStoredMeassurements;
-    console.log(this.storedMeassurements);
+    this.storageService.set('measurements', newStoredMeasurements);
+    this.storedMeasurements = newStoredMeasurements;
+    console.log(this.storedMeasurements);
   }
 
 }
