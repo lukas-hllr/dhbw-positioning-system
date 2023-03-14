@@ -24,7 +24,7 @@ public static class Trilateration
         GeoCoordinate estimatedPosition = new GeoCoordinate(lat, lon);
         double accuracy=9999, lastAccuracy=99999;
         // Iterate until the position estimate converges (Which happens when the error is not getting better)
-        while (GetAccuracyImprovement(accuracy,lastAccuracy)<epsilon)
+        while (GetAccuracyImprovement(accuracy,lastAccuracy)>epsilon)
         {
             // Calculate the distances from the current estimate to each reference point
             double[] calculatedDistances = GetCalculatedDistances(positions, estimatedPosition);
@@ -37,7 +37,6 @@ public static class Trilateration
         }
         return estimatedPosition;
     }
-
     private static double GetAccuracyImprovement(double error, double lastError)
     {
         return Math.Abs(lastError - error);
@@ -62,12 +61,10 @@ public static class Trilateration
         double lon = lonSum / sum;
         return new GeoCoordinate(lat, lon);
     }
-
     private static double CalculatedAccuracy(double[] trueDistances, double[] calculatedDistances)
     {
         return trueDistances.Select((t, i) => Math.Abs(calculatedDistances[i] - t)).Sum();
     }
-
     private static double[] GetCalculatedDistances(GeoCoordinate[] positions,GeoCoordinate calculatedPosition)
     {
         int n = positions.Length; 
@@ -78,4 +75,18 @@ public static class Trilateration
         }
         return calculatedDistances;
     }
+
+    private static double MeanSquaredError(GeoCoordinate estimatedLocation, GeoCoordinate[] knownPoints, double[] distances)
+    {
+        int n = knownPoints.Length;
+        double result = 0.0;
+
+        for (int i = 0; i < n; i++)
+        {
+            double estimatedDistance = estimatedLocation.GetDistanceTo(knownPoints[i]);
+            result += Math.Pow(estimatedDistance - distances[i], 2);
+        }
+        return result/n;
+    }
+    
 }
