@@ -10,10 +10,27 @@
   height: 100%;
 }
 
-#refreshButton {
+#bottomDiv {
   position: absolute;
   bottom: 30px;
   right: 15px;
-  padding: 10px;
+  left: 15px;
   z-index: 400;
+}
+
+#refreshButton {
+  float: right;
+}
+
+#debugSendDiv {
+  border-radius: 28px;
+  height: 56px;
+  margin-right: 71px;
+  background: red;
+  text-align: center;
+}
+
+#sendClickedButton {
+  float: right;
+  margin: auto;
 }

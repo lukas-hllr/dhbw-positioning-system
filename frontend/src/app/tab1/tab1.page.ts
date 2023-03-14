@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {WifiWizard2} from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
 import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 import {BehaviorSubject} from 'rxjs';
-import {MeassurementModel} from '../model/meassurement.model';
+import {MeasurementModel} from '../model/measurement.model';
 import {Geoposition} from '@awesome-cordova-plugins/geolocation';
 import {StorageService} from '../services/storage-service/storage.service';
 import {ApiService} from '../services/api-service/api.service';
