@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Dhbw_positioning_System_Backend.Model;
 
-
 namespace Dhbw_positioning_System_Backend
 {
     public partial class DhbwPositioningSystemDBContext : DbContext
@@ -20,14 +19,13 @@ namespace Dhbw_positioning_System_Backend
 
         public virtual DbSet<AccessPoint> AccessPoint { get; set; }
         public virtual DbSet<Measurement> Measurement { get; set; }
-        public virtual DbSet<NetworkMeasurement> NetworkMeasurement { get; set; }
+        public virtual DbSet<MeasurementEntity> MeasurementEntity { get; set; }
         public virtual DbSet<RouterType> RouterType { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite("Filename=DhbwPositioningSystemDB.db");
             }
         }
 
@@ -70,13 +68,19 @@ namespace Dhbw_positioning_System_Backend
             {
                 entity.Property(e => e.MeasurementId)
                     .HasColumnType("integer")
-                    .HasColumnName("measurement_id")
-                    .ValueGeneratedOnAdd();;
+                    .HasColumnName("measurement_id");
 
-                entity.Property(e => e.Date)
-                    .IsRequired()
-                    .HasColumnType("text")
-                    .HasColumnName("date");
+                entity.Property(e => e.AccuracyGroundTruth).HasColumnName("accuracyGroundTruth");
+
+                entity.Property(e => e.AccuracyHighAccuracy).HasColumnName("accuracyHighAccuracy");
+
+                entity.Property(e => e.AccuracyLowAccuracy).HasColumnName("accuracyLowAccuracy");
+
+                entity.Property(e => e.AltitudeGroundTruth).HasColumnName("altitudeGroundTruth");
+
+                entity.Property(e => e.AltitudeHighAccuracy).HasColumnName("altitudeHighAccuracy");
+
+                entity.Property(e => e.AltitudeLowAccuracy).HasColumnName("altitudeLowAccuracy");
 
                 entity.Property(e => e.Device)
                     .IsRequired()
@@ -101,42 +105,41 @@ namespace Dhbw_positioning_System_Backend
                 entity.Property(e => e.LongitudeLowAccuracy)
                     .HasColumnType("real")
                     .HasColumnName("longitudeLowAccuracy");
-            });
 
-            modelBuilder.Entity<NetworkMeasurement>(entity =>
-            {
-                entity.ToTable("Network_Measurement");
-
-                entity.Property(e => e.NetworkMeasurementId)
-                    .HasColumnType("integer")
-                    .HasColumnName("network_measurement_id")
-                    .ValueGeneratedOnAdd();;
-
-                entity.Property(e => e.MacAddress)
+                entity.Property(e => e.Timestamp)
                     .IsRequired()
                     .HasColumnType("text")
-                    .HasColumnName("mac_address");
+                    .HasColumnName("timestamp");
+            });
 
-                entity.Property(e => e.MeasuredStrength)
-                    .HasColumnType("real")
-                    .HasColumnName("measured_strength");
+            modelBuilder.Entity<MeasurementEntity>(entity =>
+            {
+                entity.ToTable("Measurement_Entity");
+
+                entity.Property(e => e.MeasurementEntityId)
+                    .HasColumnType("integer")
+                    .HasColumnName("measurement_entity_id");
+
+                entity.Property(e => e.Mac)
+                    .IsRequired()
+                    .HasColumnType("text")
+                    .HasColumnName("mac");
 
                 entity.Property(e => e.MeasurementId)
                     .HasColumnType("integer")
                     .HasColumnName("measurement_id");
 
-                entity.Property(e => e.NetworkSsid)
+                entity.Property(e => e.Rssi)
+                    .HasColumnType("real")
+                    .HasColumnName("rssi");
+
+                entity.Property(e => e.Ssid)
                     .IsRequired()
                     .HasColumnType("text")
-                    .HasColumnName("network_SSID");
-
-                entity.HasOne(d => d.MacAddressNavigation)
-                    .WithMany(p => p.NetworkMeasurement)
-                    .HasForeignKey(d => d.MacAddress)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .HasColumnName("ssid");
 
                 entity.HasOne(d => d.Measurement)
-                    .WithMany(p => p.NetworkMeasurement)
+                    .WithMany(p => p.MeasurementEntity)
                     .HasForeignKey(d => d.MeasurementId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
@@ -147,8 +150,7 @@ namespace Dhbw_positioning_System_Backend
 
                 entity.Property(e => e.RouterTypeId)
                     .HasColumnType("integer")
-                    .HasColumnName("router_type_id")
-                    .ValueGeneratedOnAdd();
+                    .HasColumnName("router_type_id");
 
                 entity.Property(e => e.Name)
                     .IsRequired()

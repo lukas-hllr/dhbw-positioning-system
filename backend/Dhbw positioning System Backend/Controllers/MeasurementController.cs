@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using Dhbw_positioning_System_Backend.Calculation;
 using Dhbw_positioning_System_Backend.Model;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,68 +25,54 @@ namespace Dhbw_positioning_System_Backend.Controllers
 
         // GET: Measurement
         [HttpGet]
-        public IEnumerable<Measurement> Get()
+        public IEnumerable<Measurement> GetAllMeasurements()
         {
             return _context.Measurement.ToList();
         }
         
-        // POST api/<MeasurementController>
-        // [HttpPost]
-        // public ActionResult<Measurement> Post(Measurement measurement)
-        // {
-        //     var e = _context.Measurement.Add(new Measurement()
-        //     {
-        //         Date = measurement.Date,
-        //         LatitudeHighAccuracy = measurement.LatitudeHighAccuracy,
-        //         LongitudeHighAccuracy = measurement.LongitudeHighAccuracy,
-        //         NetworkMeasurement = measurement.NetworkMeasurement
-        //     });
-        //     _context.SaveChanges();
-        //     return Ok();
-        // }
-
-        //POST /Measurement/new
-        [HttpPost("new")]
-        public HttpResponseMessage PostNew(DataSet dataset)
+        // GET: Measurement
+        [HttpGet("{MeasurementId:long}", Name = "GetMeasurement")]
+        public ActionResult<Measurement> GetMeasurement(long MeasurementId)
         {
-            var mId = _context.Measurement.Add(new Measurement()
-            {
-                LongitudeGroundTruth = dataset.PositionGroundTruth.Longitude,
-                LatitudeGroundTruth = dataset.PositionGroundTruth.Latitude,
-                LongitudeHighAccuracy = dataset.PositionHighAccuracy?.Longitude,
-                LatitudeHighAccuracy = dataset.PositionHighAccuracy?.Latitude,
-                LongitudeLowAccuracy = dataset.PositionLowAccuracy?.Longitude,
-                LatitudeLowAccuracy = dataset.PositionLowAccuracy?.Latitude,
-                Date = dataset.Timestamp,
-                Device = dataset.Device
-            }).Entity;
-            _context.SaveChanges();
-            foreach (var nw in dataset.Measurements)
-            {
-                var nm = new NetworkMeasurement()
-                {
-                    MeasurementId = mId.MeasurementId,
-                    MacAddress = nw.MAC,
-                    NetworkSsid = nw.SSID,
-                    MeasuredStrength = nw.Level,
-                };
-                _context.NetworkMeasurement.Add(nm);
-            }
-            _context.SaveChanges();
-            //Set content of ResponseMessage?
-            return new HttpResponseMessage(HttpStatusCode.Created);
+            var m = _context.Measurement.Find(MeasurementId);
+
+            if (m == null) {
+                return NotFound();
+            } 
+
+            return m;
         }
-        // // PUT api/<MeasurementController>/5
-        // [HttpPut("{id}")]
-        // public void Put(int id, [FromBody] string value)
-        // {
-        //
-        // }
-        //
-        // // DELETE api/<MeasurementController>/5
-        // [HttpDelete("{id}")]
-        // public void Delete(int id)
-        // {
-        // }
+
+        //POST /Measurement
+        [HttpPost(Name = "NewMeasurement")]
+        public ActionResult NewMeasurement(DataSet ds)
+        {
+            var m = new Measurement(){
+                MeasurementEntity = ds.Measurements,
+                Device = ds.Device,
+                Timestamp = ds.Timestamp,
+
+                LatitudeGroundTruth = ds.PositionGroundTruth.Latitude,
+                LongitudeGroundTruth = ds.PositionGroundTruth.Longitude,
+                AltitudeGroundTruth = ds.PositionGroundTruth.Altitude,
+                AccuracyGroundTruth = ds.PositionGroundTruth.Accuracy,
+
+                LatitudeHighAccuracy = ds.PositionHighAccuracy.Latitude,
+                LongitudeHighAccuracy = ds.PositionHighAccuracy.Longitude,
+                AltitudeHighAccuracy = ds.PositionHighAccuracy.Altitude,
+                AccuracyHighAccuracy = ds.PositionHighAccuracy.Accuracy,
+
+                LatitudeLowAccuracy = ds.PositionLowAccuracy.Latitude,
+                LongitudeLowAccuracy = ds.PositionLowAccuracy.Longitude,
+                AltitudeLowAccuracy = ds.PositionLowAccuracy.Altitude,
+                AccuracyLowAccuracy = ds.PositionLowAccuracy.Accuracy,
+
+            };
+            _context.Measurement.Add(m);
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }
