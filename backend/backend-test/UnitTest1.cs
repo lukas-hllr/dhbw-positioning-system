@@ -20,6 +20,7 @@ public class Tests
         };
 
         double[] distances = new double[] {15.7, 4.8, 13.2};
+        
         var result = Trilateration.IterativeIntersection(knownRoutersGeoCord, distances, 2);
         Assert.That(result.Latitude, Is.EqualTo(49.02724149333333).Within(0.001));
         Assert.That(result.Longitude, Is.EqualTo(8.385532226666667).Within(0.001));
@@ -36,7 +37,8 @@ public class Tests
         };
 
         double[] distances = new double[] {5, 10, 18};
-        var result = Trilateration.IterativeIntersection(knownRoutersGeoCord, distances);
+        Multilateration multilateration = new Multilateration(knownRoutersGeoCord, distances);
+        var result = multilateration.FindOptimalLocation();
         Console.WriteLine(result);
         Assert.That(result.Latitude, Is.EqualTo(49.027217178260145).Within(0.0001));
         Assert.That(result.Longitude, Is.EqualTo(8.38570374903793).Within(0.0001));
