@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using Dhbw_positioning_System_Backend.Calculation;
 using Dhbw_positioning_System_Backend.Model;
+using Dhbw_positioning_System_Backend.Model.dto;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -23,16 +24,16 @@ namespace Dhbw_positioning_System_Backend.Controllers
             _context = context;
         }
 
-        // GET: Measurement
+        // GET: /Measurement (All Measurements)
         [HttpGet]
-        public IEnumerable<Measurement> GetAllMeasurements()
+        public IEnumerable<MeasurementDto> GetAllMeasurements()
         {
-            return _context.Measurement.ToList();
+            return _context.Measurement.ToList().ConvertAll(m => new MeasurementDto(m));
         }
         
-        // GET: Measurement
+        // GET: /Measurement (Measurement by ID)
         [HttpGet("{MeasurementId:long}", Name = "GetMeasurement")]
-        public ActionResult<Measurement> GetMeasurement(long MeasurementId)
+        public ActionResult<MeasurementDto> GetMeasurement(long MeasurementId)
         {
             var m = _context.Measurement.Find(MeasurementId);
 
@@ -40,39 +41,20 @@ namespace Dhbw_positioning_System_Backend.Controllers
                 return NotFound();
             } 
 
-            return m;
+            return new MeasurementDto(m);
         }
 
-        //POST /Measurement
+        //POST /Measurement (new Measurement)
         [HttpPost(Name = "NewMeasurement")]
-        public ActionResult NewMeasurement(DataSet ds)
+        public ActionResult NewMeasurement(MeasurementDto mDto)
         {
-            var m = new Measurement(){
-                MeasurementEntity = ds.Measurements,
-                Device = ds.Device,
-                Timestamp = ds.Timestamp,
+            var m = mDto.toMeasurement();
 
-                LatitudeGroundTruth = ds.PositionGroundTruth.Latitude,
-                LongitudeGroundTruth = ds.PositionGroundTruth.Longitude,
-                AltitudeGroundTruth = ds.PositionGroundTruth.Altitude,
-                AccuracyGroundTruth = ds.PositionGroundTruth.Accuracy,
-
-                LatitudeHighAccuracy = ds.PositionHighAccuracy.Latitude,
-                LongitudeHighAccuracy = ds.PositionHighAccuracy.Longitude,
-                AltitudeHighAccuracy = ds.PositionHighAccuracy.Altitude,
-                AccuracyHighAccuracy = ds.PositionHighAccuracy.Accuracy,
-
-                LatitudeLowAccuracy = ds.PositionLowAccuracy.Latitude,
-                LongitudeLowAccuracy = ds.PositionLowAccuracy.Longitude,
-                AltitudeLowAccuracy = ds.PositionLowAccuracy.Altitude,
-                AccuracyLowAccuracy = ds.PositionLowAccuracy.Accuracy,
-
-            };
             _context.Measurement.Add(m);
 
             _context.SaveChanges();
 
-            return Ok();
+            return CreatedAtRoute("GetMeasurement", new {m.MeasurementId}, new MeasurementDto(m));
         }
     }
 }

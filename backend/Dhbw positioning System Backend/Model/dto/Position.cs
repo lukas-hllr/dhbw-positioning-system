@@ -1,9 +1,9 @@
-﻿namespace Dhbw_positioning_System_Backend.Model
+﻿namespace Dhbw_positioning_System_Backend.Model.dto
 {
-    public class Position
+    public class PositionDto
     {
-        public Position(){}
-        public Position(double lat, double lon, double alt, double acc){
+        public PositionDto(){}
+        public PositionDto(double lat, double lon, double alt, double acc){
             this.Latitude = lat;
             this.Longitude = lon;
             this.Altitude = alt;

@@ -1,6 +1,7 @@
 using System.Runtime.Intrinsics.Arm;
 using Dhbw_positioning_System_Backend.Calculation;
 using Dhbw_positioning_System_Backend.Model;
+using Dhbw_positioning_System_Backend.Model.dto;
 using GeoCoordinatePortable;
 
 namespace backend_test;
@@ -47,10 +48,10 @@ public class Tests
     [Test]
     public void TestRssiConverter()
     {
-        var dp = new DataPoint
+        var dp = new MeasurementEntityDto()
         {
-            Level = -76,
-            SSID = "DHBW-KA5"
+            Rssi = -76,
+            Ssid = "DHBW-KA5"
         };
         var result = RSSItoDistanceConverter.Convert(dp);
         Console.WriteLine(result);

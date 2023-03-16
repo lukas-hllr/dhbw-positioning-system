@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,8 +21,11 @@ namespace Dhbw_positioning_System_Backend
         public void ConfigureServices(IServiceCollection services)
         {
 
-            string connectionString = System.Environment.CurrentDirectory+ "/DhbwPositioningSystemDB.db";
-            services.AddDbContext<DhbwPositioningSystemDBContext>(options => options.UseSqlite("Data Source = "+connectionString));
+            string connectionString = "DhbwPositioningSystemDB.db";
+            services.AddDbContext<DhbwPositioningSystemDBContext>(options => {
+                options.UseSqlite("Filename=" + connectionString);
+                options.UseLazyLoadingProxies();
+            });
             services.AddControllers();
             services.AddCors(options =>
             {

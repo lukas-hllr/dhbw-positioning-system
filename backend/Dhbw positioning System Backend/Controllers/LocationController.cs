@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Dhbw_positioning_System_Backend.Model;
+using Dhbw_positioning_System_Backend.Model.dto;
 using Dhbw_positioning_System_Backend.Calculation;
 using GeoCoordinatePortable;
 
@@ -25,18 +26,18 @@ namespace Dhbw_positioning_System_Backend.Controllers
         // POST: getLocation
         [HttpPost]
 
-        public ActionResult<Position> getLocation(IEnumerable<DataPoint> aps)
+        public ActionResult<PositionDto> getLocation(IEnumerable<MeasurementEntityDto> aps)
         {
 
-            List<DataPoint> aps_filtered = this.excludeDuplicates(aps);
+            List<MeasurementEntityDto> aps_filtered = this.excludeDuplicates(aps);
 
             List<double> distances = new List<double>();
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
 
-            foreach (DataPoint ap in aps_filtered)
+            foreach (MeasurementEntityDto ap in aps_filtered)
             {
                 AccessPoint correspondingAp = _context.AccessPoint.Find(
-                    ap.MAC.Remove(16, 1).ToLower() + "0"
+                    ap.Mac.Remove(16, 1).ToLower() + "0"
                 );
 
                 if (correspondingAp != null)
@@ -58,22 +59,22 @@ namespace Dhbw_positioning_System_Backend.Controllers
                 5
             );
             
-            return new Position(result.Latitude, result.Longitude, -1, 1);
+            return new PositionDto(result.Latitude, result.Longitude, -1, 1);
         }
 
         /*
             Priorise 5GHz Networks and filter out
             duplicate 2.4Ghz Networks
         */
-        private List<DataPoint> excludeDuplicates(IEnumerable<DataPoint> aps){
-            aps = aps.OrderByDescending(ap => ap.SSID);
+        private List<MeasurementEntityDto> excludeDuplicates(IEnumerable<MeasurementEntityDto> aps){
+            aps = aps.OrderByDescending(ap => ap.Ssid);
 
-            List<DataPoint> filtered = new List<DataPoint>();
+            List<MeasurementEntityDto> filtered = new List<MeasurementEntityDto>();
             List<string> macs = new List<string>();
             
-            foreach (DataPoint ap in aps)
+            foreach (MeasurementEntityDto ap in aps)
             {
-                string current_mac = ap.MAC.Remove(16, 1).ToLower();
+                string current_mac = ap.Mac.Remove(16, 1).ToLower();
 
                 if (!macs.Contains(current_mac)){
                     filtered.Add(ap);

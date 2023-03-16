@@ -22,12 +22,7 @@ namespace Dhbw_positioning_System_Backend
         public virtual DbSet<MeasurementEntity> MeasurementEntity { get; set; }
         public virtual DbSet<RouterType> RouterType { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-            }
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -129,9 +124,7 @@ namespace Dhbw_positioning_System_Backend
                     .HasColumnType("integer")
                     .HasColumnName("measurement_id");
 
-                entity.Property(e => e.Rssi)
-                    .HasColumnType("real")
-                    .HasColumnName("rssi");
+                entity.Property(e => e.Rssi).HasColumnName("rssi");
 
                 entity.Property(e => e.Ssid)
                     .IsRequired()
