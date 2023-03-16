@@ -49,6 +49,7 @@ namespace Dhbw_positioning_System_Backend.Controllers
         public ActionResult NewMeasurement(MeasurementDto mDto)
         {
             var m = mDto.toMeasurement();
+            m.Timestamp = null;
 
             _context.Measurement.Add(m);
 

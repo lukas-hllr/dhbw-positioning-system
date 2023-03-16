@@ -22,8 +22,6 @@ namespace Dhbw_positioning_System_Backend
         public virtual DbSet<MeasurementEntity> MeasurementEntity { get; set; }
         public virtual DbSet<RouterType> RouterType { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AccessPoint>(entity =>
@@ -104,7 +102,8 @@ namespace Dhbw_positioning_System_Backend
                 entity.Property(e => e.Timestamp)
                     .IsRequired()
                     .HasColumnType("text")
-                    .HasColumnName("timestamp");
+                    .HasColumnName("timestamp")
+                    .HasDefaultValueSql("STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')");
             });
 
             modelBuilder.Entity<MeasurementEntity>(entity =>

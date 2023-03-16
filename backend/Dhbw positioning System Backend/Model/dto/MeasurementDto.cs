@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 #nullable enable
 
@@ -12,7 +13,7 @@ namespace Dhbw_positioning_System_Backend.Model.dto
         public PositionDto? PositionHighAccuracy { get; set; }
         public PositionDto? PositionLowAccuracy { get; set; }
         public string Device { get; set; }
-        public string Timestamp { get; set; }
+        public DateTime? Timestamp { get; set; }
 
         public MeasurementDto(){}
 
@@ -22,7 +23,7 @@ namespace Dhbw_positioning_System_Backend.Model.dto
                 this.Measurements = new List<MeasurementEntity>(m.MeasurementEntity).ConvertAll(me => new MeasurementEntityDto(me));
 
                 this.Device = m.Device;
-                this.Timestamp = m.Timestamp;
+                this.Timestamp = DateTime.Parse(m.Timestamp);
 
                 this.PositionGroundTruth = new PositionDto(
                     m.LatitudeGroundTruth,
@@ -56,22 +57,21 @@ namespace Dhbw_positioning_System_Backend.Model.dto
                 MeasurementEntity = this.Measurements.ConvertAll(m => m.toMeasurementEntity()),
 
                 Device = this.Device,
-                Timestamp = this.Timestamp,
 
                 LatitudeGroundTruth = this.PositionGroundTruth.Latitude,
                 LongitudeGroundTruth = this.PositionGroundTruth.Longitude,
                 AltitudeGroundTruth = this.PositionGroundTruth.Altitude,
                 AccuracyGroundTruth = this.PositionGroundTruth.Accuracy,
 
-                LatitudeHighAccuracy = this.PositionHighAccuracy.Latitude,
-                LongitudeHighAccuracy = this.PositionHighAccuracy.Longitude,
-                AltitudeHighAccuracy = this.PositionHighAccuracy.Altitude,
-                AccuracyHighAccuracy = this.PositionHighAccuracy.Accuracy,
+                LatitudeHighAccuracy = this.PositionHighAccuracy?.Latitude,
+                LongitudeHighAccuracy = this.PositionHighAccuracy?.Longitude,
+                AltitudeHighAccuracy = this.PositionHighAccuracy?.Altitude,
+                AccuracyHighAccuracy = this.PositionHighAccuracy?.Accuracy,
 
-                LatitudeLowAccuracy = this.PositionLowAccuracy.Latitude,
-                LongitudeLowAccuracy = this.PositionLowAccuracy.Longitude,
-                AltitudeLowAccuracy = this.PositionLowAccuracy.Altitude,
-                AccuracyLowAccuracy = this.PositionLowAccuracy.Accuracy,
+                LatitudeLowAccuracy = this.PositionLowAccuracy?.Latitude,
+                LongitudeLowAccuracy = this.PositionLowAccuracy?.Longitude,
+                AltitudeLowAccuracy = this.PositionLowAccuracy?.Altitude,
+                AccuracyLowAccuracy = this.PositionLowAccuracy?.Accuracy,
             };
 
             return m;
