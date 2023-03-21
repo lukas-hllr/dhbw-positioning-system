@@ -160,3 +160,117 @@ GT:
           8.38504228911998,
           49.02726637327885
         ],
+_________________________________ von lukas
+
+[
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:21:ce:2e",
+        "rssi": -47
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:21:ce:2f",
+        "rssi": -48
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:1f:ce:a0",
+        "rssi": -67
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:21:88:e0",
+        "rssi": -70
+    },
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:21:88:ee",
+        "rssi": -71
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:21:88:ef",
+        "rssi": -72
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:1f:ca:e0",
+        "rssi": -74
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:21:05:20",
+        "rssi": -75
+    },
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:21:ea:6e",
+        "rssi": -77
+    },
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:1f:ce:ae",
+        "rssi": -77
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:21:ea:6f",
+        "rssi": -77
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:1f:ce:af",
+        "rssi": -77
+    },
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:1f:ca:ee",
+        "rssi": -78
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:1f:ca:ef",
+        "rssi": -79
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:20:fd:a0",
+        "rssi": -79
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:20:fd:af",
+        "rssi": -79
+    },
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:20:fd:ae",
+        "rssi": -79
+    },
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:20:dc:8e",
+        "rssi": -85
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:20:dc:8f",
+        "rssi": -86
+    },
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:20:48:4e",
+        "rssi": -86
+    },
+    {
+        "ssid": "DHBW-KA5",
+        "mac": "70:f0:96:21:05:2e",
+        "rssi": -87
+    },
+    {
+        "ssid": "DHBW-KA",
+        "mac": "70:f0:96:21:05:2f",
+        "rssi": -87
+    }
+]
