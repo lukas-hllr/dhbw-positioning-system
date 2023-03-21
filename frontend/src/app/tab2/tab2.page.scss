@@ -23,14 +23,28 @@
 }
 
 #debugSendDiv {
+  display: flex;
   border-radius: 28px;
   height: 56px;
   margin-right: 71px;
   background: red;
-  text-align: center;
 }
 
 #sendClickedButton {
   float: right;
-  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 10px;
+}
+
+#coords {
+  line-height: 23px;
+  flex-grow: 1;
+  padding: 5px 0 5px 25px;
+}
+
+#coords span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
 }

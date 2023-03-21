@@ -86,7 +86,7 @@ export class Tab2Page implements AfterViewInit {
     this.locationAccuracy = L.circle([pos.latitude, pos.longitude], pos.accuracy / 2).addTo(this.map);
   }
 
-  sendCurrentPos() {
+  public sendCurrentPos(): void {
     const realPos = new PositionModel(this.clickedPos.lat, this.clickedPos.lng, 0, 0);
     this.apScanService.send(realPos);
   }

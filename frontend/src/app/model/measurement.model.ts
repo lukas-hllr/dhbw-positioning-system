@@ -1,15 +1,15 @@
 import {Geoposition} from '@awesome-cordova-plugins/geolocation';
-import {ApScanItemModel} from './ap-scan-item.model';
+import {MeasurementEntity} from './measurement-entity';
 import {PositionModel} from './position.model';
 
 
 export class MeasurementModel {
 
-  public measurements: ApScanItemModel[];
-
-  public positionLowAccuracy: PositionModel;
+  public measurements: MeasurementEntity[];
 
   public positionHighAccuracy: PositionModel;
+
+  public positionLowAccuracy: PositionModel;
 
   public timestamp: Date;
 
@@ -23,13 +23,13 @@ export class MeasurementModel {
     this.measurements = [];
     for (let i = 0; i < measurements.length; i++) {
       this.measurements[i] = {
-        SSID: measurements[i].SSID,
-        MAC: measurements[i].BSSID,
-        level: measurements[i].level,
+        ssid: measurements[i].SSID,
+        mac: measurements[i].BSSID,
+        rssi: measurements[i].level,
       };
     }
-    this.measurements = this.measurements.filter(m => m.SSID.includes('DHBW-KA')).sort((m1, m2) =>
-      m2.level - m1.level);
+    this.measurements = this.measurements.filter(m => m.ssid.includes('DHBW-KA')).sort((m1, m2) =>
+      m2.rssi - m1.rssi);
 
     if (positionHighAccuracy) {
       this.positionHighAccuracy = new PositionModel(
@@ -50,6 +50,6 @@ export class MeasurementModel {
     }
 
     this.timestamp = new Date(Date.now());
-    this.device = "Honor";
+    this.device = 'Honor';
   }
 }

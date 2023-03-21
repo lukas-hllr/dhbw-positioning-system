@@ -18,10 +18,10 @@
 
   <mat-accordion>
 
-    <mat-expansion-panel *ngFor="let m of this.apScanService.storedMeassurements" hideToggle>
+    <mat-expansion-panel *ngFor="let m of this.apScanService.storedMeasurements" hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{m.meassurements.length + ' APs'}}
+          {{m.measurements.length + ' APs'}}
         </mat-panel-title>
         <mat-panel-description>
           {{m.timestamp | date:'MMM d, y, H:mm:ss'}}

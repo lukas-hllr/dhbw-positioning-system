@@ -4,7 +4,7 @@ import {MeasurementModel} from '../../model/measurement.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {map} from 'rxjs/operators';
-import {ApScanItemModel} from '../../model/ap-scan-item.model';
+import {MeasurementEntity} from '../../model/measurement-entity';
 import {PositionModel} from "../../model/position.model";
 import {MeasurementBackendModel} from "../../model/measurement-backend.model";
 
@@ -23,23 +23,14 @@ export class ApiService {
 
   public writeMeasurement(m: MeasurementBackendModel): Observable<any> {
     this.$sending.next(true);
-    return this.http.post<any>(`${environment.apiUrl}/measurement/new`, m)
+    return this.http.post<any>(`${environment.apiUrl}/measurement`, m)
       .pipe(map(writtenMeasurement => {
         this.$sending.next(false);
         return writtenMeasurement;
       }));
   }
 
-  public getMeasurement(m: MeasurementModel): Observable<any> {
-    this.$sending.next(true);
-    return this.http.post<any>(`${environment.apiUrl}/`, m)
-      .pipe(map(writtenMeasurement => {
-        this.$sending.next(false);
-        return writtenMeasurement;
-      }));
-  }
-
-  public getPosition(scan: ApScanItemModel[]): Observable<PositionModel> {
+  public getPosition(scan: MeasurementEntity[]): Observable<PositionModel> {
     this.$sending.next(true);
     return this.http.post<PositionModel>(`${environment.apiUrl}/location`, scan)
       .pipe(map(p => {

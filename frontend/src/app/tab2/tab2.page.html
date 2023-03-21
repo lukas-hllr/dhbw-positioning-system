@@ -7,8 +7,14 @@
         <mat-icon>my_location</mat-icon>
       </button>
 
-      <div id="debugSendDiv">
-        <span>{{this.clickedPos}}</span>
+      <div id="debugSendDiv" *ngIf="this.clickedPos">
+
+        <div id="coords">
+          <span>Latitude: {{this.clickedPos.lat}}</span>
+          <br/>
+          <span>Longitude: {{this.clickedPos.lng}}</span>
+        </div>
+
         <button mat-mini-fab id="sendClickedButton" color="accent" (click)="sendCurrentPos()">
           <mat-icon>send</mat-icon>
         </button>
