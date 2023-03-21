@@ -1,6 +1,6 @@
-import {Geoposition} from '@awesome-cordova-plugins/geolocation';
 import {MeasurementEntity} from './measurement-entity';
 import {PositionModel} from './position.model';
+import {Position} from '@capacitor/geolocation';
 
 
 export class MeasurementModel {
@@ -13,12 +13,10 @@ export class MeasurementModel {
 
   public timestamp: Date;
 
-  public device: string;
-
   constructor(
     measurements: any[],
-    positionLowAccuracy?: Geoposition,
-    positionHighAccuracy?: Geoposition,
+    positionLowAccuracy?: Position,
+    positionHighAccuracy?: Position,
   ) {
     this.measurements = [];
     for (let i = 0; i < measurements.length; i++) {
@@ -50,6 +48,5 @@ export class MeasurementModel {
     }
 
     this.timestamp = new Date(Date.now());
-    this.device = 'Honor';
   }
 }

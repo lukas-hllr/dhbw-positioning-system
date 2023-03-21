@@ -7,7 +7,6 @@ import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {WifiWizard2} from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
-import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {IonicStorageModule} from '@ionic/storage-angular';
 import {HttpClientModule} from '@angular/common/http';
@@ -26,7 +25,6 @@ import {HttpClientModule} from '@angular/common/http';
   providers: [
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     WifiWizard2,
-    Geolocation,
   ],
   bootstrap: [AppComponent],
 })

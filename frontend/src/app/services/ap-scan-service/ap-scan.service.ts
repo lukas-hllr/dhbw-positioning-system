@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 import {MeasurementModel} from '../../model/measurement.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {WifiWizard2} from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
-import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 import {StorageService} from '../storage-service/storage.service';
-import {Geoposition} from '@awesome-cordova-plugins/geolocation';
-import {ApiService} from "../api-service/api.service";
-import {first} from "rxjs/operators";
-import {MeasurementBackendModel} from "../../model/measurement-backend.model";
-import {PositionModel} from "../../model/position.model";
+import {ApiService} from '../api-service/api.service';
+import {first} from 'rxjs/operators';
+import {MeasurementBackendModel} from '../../model/measurement-backend.model';
+import {PositionModel} from '../../model/position.model';
+import {Geolocation, Position} from '@capacitor/geolocation';
+import { Device } from '@capacitor/device';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +25,10 @@ export class ApScanService {
 
   public latestFailed: boolean;
 
+  public deviceName: string;
+
   constructor(
     public wifiWizard: WifiWizard2,
-    private geolocation: Geolocation,
     private storageService: StorageService,
     private apiService: ApiService
   ) {
@@ -43,29 +44,46 @@ export class ApScanService {
       } else {
         this.storedMeasurements = [];
       }
+      console.log(this.storedMeasurements);
+    });
+
+    Device.getInfo().then( info => {
+      this.deviceName = `${info.model} (${info.manufacturer})`;
+      console.log(this.deviceName);
     });
   }
 
   public async scan(): Promise<void> {
     let scanR: any;
-    let posH: Geoposition;
-    let posL: Geoposition;
+    let posH: Position;
+    let posL: Position;
+
+    console.log('Scan started');
+    console.log('scanning WiFi-Networks...');
 
     await this.wifiWizard.scan()
-      .then(result => scanR = result)
+      .then(result => {scanR = result; console.log(result);})
       .catch(error => {
         this.scanResult.next(error);
+        console.log(error);
         return Promise.reject(error);
       });
-    await this.geolocation.getCurrentPosition({enableHighAccuracy: false, maximumAge: 0})
-      .then(result => posL = result)
-      .catch(error => Promise.reject(error));
+
+    console.log('getting Position (Low Accuracy)...');
+    await Geolocation.getCurrentPosition({enableHighAccuracy: false, timeout: 5000, maximumAge: 0})
+      .then(result => {posL = result; console.log(result);})
+      .catch(error => {console.log(error); Promise.reject(error);});
+
     await new Promise(resolve => setTimeout(resolve, 1000));
-    await this.geolocation.getCurrentPosition({enableHighAccuracy: true, maximumAge: 0})
-      .then(result => posH = result)
-      .catch(error => Promise.reject(error));
+
+    console.log('getting Position (High Accuracy)...');
+    await Geolocation.getCurrentPosition({enableHighAccuracy: true, timeout: 5000, maximumAge: 0})
+      .then(result => {posH = result; console.log(result);})
+      .catch(error => {console.log(error); Promise.reject(error);});
 
     const m = new MeasurementModel(scanR, posL, posH);
+    console.log('Result:');
+    console.log(m);
     this.scanResult.next(m);
     this.saveMeasurement(m);
   }
@@ -79,7 +97,7 @@ export class ApScanService {
   }
 
   public async updatePos(): Promise<void> {
-    await this.geolocation.getCurrentPosition({enableHighAccuracy: false, maximumAge: 0}).then(result => {
+    await Geolocation.getCurrentPosition({enableHighAccuracy: false, maximumAge: 0}).then(result => {
       this.posResultLowAcc.next({
         latitude: result.coords.latitude,
         longitude: result.coords.latitude,
@@ -94,7 +112,7 @@ export class ApScanService {
 
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    await this.geolocation.getCurrentPosition({enableHighAccuracy: true, maximumAge: 0}).then(result => {
+    await Geolocation.getCurrentPosition({enableHighAccuracy: true, maximumAge: 0}).then(result => {
       this.posResultHighAcc.next({
         latitude: result.coords.latitude,
         longitude: result.coords.latitude,
@@ -111,8 +129,9 @@ export class ApScanService {
   public send(realPos: PositionModel): void {
     const scanResult = this.scanResult.getValue();
     if (scanResult instanceof MeasurementModel) {
-      const scanBackend = new MeasurementBackendModel(scanResult, realPos);
+      const scanBackend = new MeasurementBackendModel(scanResult, realPos, this.deviceName);
       console.log(scanBackend);
+      console.log(this.deviceName);
       this.apiService.writeMeasurement(scanBackend).pipe(first()).subscribe();
     }
   }
