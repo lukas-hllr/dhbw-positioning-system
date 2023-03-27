@@ -26,10 +26,10 @@ namespace Dhbw_positioning_System_Backend.Controllers
         // POST: getLocation
         [HttpPost]
 
-        public ActionResult<PositionDto> getLocation(IEnumerable<MeasurementEntityDto> aps)
+        public ActionResult<PositionDto> GetLocation(IEnumerable<MeasurementEntityDto> aps)
         {
 
-            List<MeasurementEntityDto> aps_filtered = this.excludeDuplicates(aps);
+            List<MeasurementEntityDto> aps_filtered = this.ExcludeDuplicates(aps);
 
             List<double> distances = new List<double>();
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
@@ -66,7 +66,7 @@ namespace Dhbw_positioning_System_Backend.Controllers
             Priorise 5GHz Networks and filter out
             duplicate 2.4Ghz Networks
         */
-        private List<MeasurementEntityDto> excludeDuplicates(IEnumerable<MeasurementEntityDto> aps){
+        private List<MeasurementEntityDto> ExcludeDuplicates(IEnumerable<MeasurementEntityDto> aps){
             aps = aps.OrderByDescending(ap => ap.Ssid);
 
             List<MeasurementEntityDto> filtered = new List<MeasurementEntityDto>();
