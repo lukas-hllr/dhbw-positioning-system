@@ -1,4 +1,4 @@
-import {Component, AfterViewInit} from '@angular/core';
+import {Component, AfterViewInit, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import * as levels_geojson from '../../assets/map-levels/2og_cal.json';
 import {ApiService} from "../services/api-service/api.service";
@@ -19,6 +19,8 @@ export class Tab2Page implements AfterViewInit {
   private locationAccuracy;
 
   private clickedMarker;
+
+  private debugScanCompleted = false;
 
   constructor(private apiService: ApiService, private apScanService: ApScanService) {
   }
@@ -42,14 +44,16 @@ export class Tab2Page implements AfterViewInit {
 
     tiles.addTo(this.map);
 
-    L.geoJSON(levels_geojson as any).addTo(this.map);
+    L.geoJSON(levels_geojson as any, {style: this.setStyle}).addTo(this.map);
 
     this.map.on('click', (e) => {
-      if (this.clickedMarker !== undefined) {
+      this.debugScanCompleted = false;
+      if (this.clickedMarker) {
         this.map.removeLayer(this.clickedMarker);
       }
-      this.clickedMarker = L.marker(e.latlng).addTo(this.map);
-      this.clickedMarker._icon.classList.add("debugMarker");
+      this.clickedMarker = L.marker(e.latlng).addTo(this.map)
+        .bindPopup(`Latitude: ${e.latlng.lat}<br>Longitude: ${e.latlng.lng}`);
+      this.clickedMarker._icon.classList.add('debugMarker');
       this.clickedPos = e.latlng;
       console.log(e.latlng);
     });
@@ -57,6 +61,17 @@ export class Tab2Page implements AfterViewInit {
     setTimeout(() => {
       this.map.invalidateSize();
     }, 0);
+  }
+
+  private setStyle(feature) {
+    const p = feature.properties;
+    return {
+      fillColor: p.fill !== undefined ? p.fill : '#B6B0AD',
+      color: p.stroke !== undefined ? p.stroke : '#555555',
+      fillOpacity: p['fill-opacity'] !== undefined ? p['fill-opacity'] : 0.5,
+      opacity: p['stroke-opacity'] !== undefined ? p['stroke-opacity'] : 1,
+      weight: p['stroke-width'] !== undefined ? p['stroke-width'] : 2,
+    };
   }
 
   onMapReady(map: L.Map) {
@@ -87,7 +102,19 @@ export class Tab2Page implements AfterViewInit {
   }
 
   public sendCurrentPos(): void {
+    if (this.clickedMarker) {
+      this.map.removeLayer(this.clickedMarker);
+    }
+    this.debugScanCompleted = false;
     const realPos = new PositionModel(this.clickedPos.lat, this.clickedPos.lng, 0, 0);
     this.apScanService.send(realPos);
+    this.clickedMarker = undefined;
+    this.clickedPos = undefined;
+  }
+
+  public scanNetwork(): void {
+    this.apScanService.scan().then(() => {
+      this.debugScanCompleted = true;
+    });
   }
 }

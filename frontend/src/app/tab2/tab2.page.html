@@ -3,21 +3,35 @@
     <div id="map"></div>
 
     <div id="bottomDiv">
-      <button mat-fab id="refreshButton" color="primary" (click)="refresh()">
+      <button mat-fab id="refreshButton" (click)="refresh()">
         <mat-icon>my_location</mat-icon>
       </button>
 
       <div id="debugSendDiv" *ngIf="this.clickedPos">
 
-        <div id="coords">
-          <span>Latitude: {{this.clickedPos.lat}}</span>
-          <br/>
-          <span>Longitude: {{this.clickedPos.lng}}</span>
+        <div id="debugSendText">
+          <p *ngIf="!this.debugScanCompleted">Click to scan</p>
+          <p *ngIf="this.debugScanCompleted">Found {{this.apScanService.scanResult.getValue().measurements.length}} DHBW APs</p>
         </div>
 
-        <button mat-mini-fab id="sendClickedButton" color="accent" (click)="sendCurrentPos()">
-          <mat-icon>send</mat-icon>
+        <button
+          *ngIf="this.debugScanCompleted"
+          mat-mini-fab
+          class="sendClickedButton"
+          (click)="sendCurrentPos()"
+        >
+          <mat-icon [class.pulse]="this.apiService.$sending | async">send</mat-icon>
         </button>
+
+        <button
+          *ngIf="!this.debugScanCompleted"
+          mat-mini-fab
+          class="sendClickedButton"
+          (click)="scanNetwork()"
+        >
+          <mat-icon [class.pulse]="this.apScanService.$scanning | async">wifi_find</mat-icon>
+        </button>
+
       </div>
     </div>
 

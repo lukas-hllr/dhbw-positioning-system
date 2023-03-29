@@ -27,6 +27,8 @@ export class ApScanService {
 
   public deviceName: string;
 
+  public $scanning: BehaviorSubject<boolean>;
+
   constructor(
     public wifiWizard: WifiWizard2,
     private storageService: StorageService,
@@ -37,6 +39,8 @@ export class ApScanService {
     this.wifiScanResult = new BehaviorSubject<any>({});
     this.posResultHighAcc = new BehaviorSubject(null);
     this.posResultLowAcc = new BehaviorSubject(null);
+
+    this.$scanning = new BehaviorSubject(false);
 
     this.storageService.get('measurements').then(m => {
       if (m) {
@@ -60,6 +64,8 @@ export class ApScanService {
 
     console.log('Scan started');
     console.log('scanning WiFi-Networks...');
+
+    this.$scanning.next(true);
 
     await this.wifiWizard.scan()
       .then(result => {scanR = result; console.log(result);})
@@ -86,14 +92,20 @@ export class ApScanService {
     console.log(m);
     this.scanResult.next(m);
     this.saveMeasurement(m);
+    this.$scanning.next(false);
   }
 
   public async scanNetworks(): Promise<any> {
+    this.$scanning.next(true);
     await this.wifiWizard.scan().then(result => {
       this.wifiScanResult.next(result);
       console.log('WiFiScan:');
       console.log(result);
-    }).catch(reason => this.wifiScanResult.next({reason}));
+      this.$scanning.next(false);
+    }).catch(reason => {
+      this.wifiScanResult.next({reason});
+      this.$scanning.next(false);
+    });
   }
 
   public async updatePos(): Promise<void> {
