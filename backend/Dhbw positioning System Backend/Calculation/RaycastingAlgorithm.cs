@@ -1,34 +1,46 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using GeoCoordinatePortable;
-using Newtonsoft.Json.Linq;
+using GeoJSON.Net.Feature;
+using GeoJSON.Net.Geometry;
+using Newtonsoft.Json;
 
 namespace Dhbw_positioning_System_Backend.Calculation;
 
 public class RayCastingAlgorithm
 {
-    public static readonly List<GeoCoordinate>Audimax = new List<GeoCoordinate>()
+    List<Feature> geoData;
+    public RayCastingAlgorithm()
     {
-        new GeoCoordinate(longitude:8.385570490303623, latitude:49.02685019084306),
-        new GeoCoordinate(longitude:8.385575703581326, latitude:49.02687383312321),
-        new GeoCoordinate(longitude:8.385647104316815, latitude:49.026866917465505),
-        new GeoCoordinate(longitude:8.385704184695946, latitude:49.02687890785823),
-        new GeoCoordinate(longitude:8.38574095401178, latitude:49.027045656180164),
-        new GeoCoordinate(longitude:8.385691563768605, latitude:49.02706854018315),
-        new GeoCoordinate(longitude:8.385643447456738, latitude:49.02707308909208),
-        new GeoCoordinate(longitude:8.385618280449936, latitude:49.02707546832719),
-        new GeoCoordinate(longitude:8.385623461200174, latitude:49.02709896269424),
-        new GeoCoordinate(longitude:8.385604471434805, latitude:49.02709549178795),
-        new GeoCoordinate(longitude:8.385599144829467, latitude:49.027071335804365),
-        new GeoCoordinate(longitude:8.385534093388914, latitude:49.02706131996549),
-        new GeoCoordinate(longitude:8.385499115470612, latitude:49.026902695656915),
-        new GeoCoordinate(longitude:8.385558735967296, latitude:49.02688048255547),
-        new GeoCoordinate(longitude:8.385553468534818, latitude:49.02685659489871),
-        new GeoCoordinate(longitude:8.385570490303623, latitude:49.02685019084306)
-    };
+        string fileName = Path.Join(Directory.GetCurrentDirectory(), "2og_cal.json");
+        string jsonString = File.ReadAllText(fileName);
+        var featureCollection = JsonConvert.DeserializeObject<FeatureCollection>(jsonString)!;
+        geoData = featureCollection.Features
+            .Where(e => e.Geometry is Polygon)
+            .Where(e => e.Properties.ContainsKey("room"))
+            .ToList();
+    }
 
+    public string GetRoom(GeoCoordinate point)
+    {
+        foreach (Feature feature in geoData)
+        {
+            var c = (feature.Geometry as Polygon)
+                .Coordinates[0]
+                .Coordinates
+                .ToList();
+            if (CheckIfInside(c, point))
+            {
+                return feature.Properties["room"] as string;
+            }
+        }
+        return null;
+    }
 
-
-    public static bool CheckIfInside(List<GeoCoordinate> room, GeoCoordinate point)
+    public static bool CheckIfInside(List<IPosition> room, GeoCoordinate point)
     {
         int count = room.Count;
 

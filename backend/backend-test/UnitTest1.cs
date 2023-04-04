@@ -84,20 +84,23 @@ public class Tests
     }
 
     [Test]
-    public void TestRayCastingInside()
+    public void TestRayCastingWithPointInAudimax()
     {
-        GeoCoordinate pointOutside = new GeoCoordinate(49.0273064641865, 8.38550658162981);
-        bool result = RayCastingAlgorithm.CheckIfInside(RayCastingAlgorithm.Audimax, pointOutside);
-        Assert.That(result,Is.False);
+        RayCastingAlgorithm rc = new RayCastingAlgorithm();
+        GeoCoordinate audimax = new GeoCoordinate(49.02700149361377, 8.385664256051086);
+        string result = rc.GetRoom(audimax);
+        Assert.That(result, Is.EqualTo("audimax"));
     }
-    
+
     [Test]
-    public void TestRayCastingOutside()
+    public void TestRayCastingWithPointOutside()
     {
-        GeoCoordinate pointOutside = new GeoCoordinate(49.02700149361377,8.385664256051086);
-        bool result = RayCastingAlgorithm.CheckIfInside(RayCastingAlgorithm.Audimax, pointOutside);
-        Assert.That(result,Is.True);
+        RayCastingAlgorithm rc = new RayCastingAlgorithm();
+        GeoCoordinate pointOutside = new GeoCoordinate(49.026994, 8.385271);
+        string result = rc.GetRoom(pointOutside);
+        Assert.That(result, Is.Null);
     }
+
 
     [Test]
     public void AbusingAsAMain()

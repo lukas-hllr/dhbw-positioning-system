@@ -12,6 +12,7 @@
     <ItemGroup>
         <PackageReference Include="alglib.net" Version="3.19.0" />
         <PackageReference Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
+        <PackageReference Include="GeoJSON.Net" Version="1.2.19" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
@@ -22,5 +23,12 @@
     <ItemGroup>
       <ProjectReference Include="..\Dhbw positioning System Backend\Dhbw positioning System Backend.csproj" />
     </ItemGroup>
+	
+	<Target Name="CopyGeoJson" AfterTargets="Build">
+      <ItemGroup>
+      <MockFile Include="$(ProjectDir)..\..\frontend\src\assets\map-levels\2og_cal.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MockFile)" DestinationFolder="$(OutDir)" />
+    </Target>
 
 </Project>
