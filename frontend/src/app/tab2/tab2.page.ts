@@ -44,7 +44,7 @@ export class Tab2Page implements AfterViewInit {
 
     tiles.addTo(this.map);
 
-    L.geoJSON(levels_geojson as any, {style: this.setStyle}).addTo(this.map);
+    L.geoJSON(levels_geojson as any, {style: this.setStyle, filter: this.featureFilter}).addTo(this.map);
 
     this.map.on('click', (e) => {
       this.debugScanCompleted = false;
@@ -72,6 +72,13 @@ export class Tab2Page implements AfterViewInit {
       opacity: p['stroke-opacity'] !== undefined ? p['stroke-opacity'] : 1,
       weight: p['stroke-width'] !== undefined ? p['stroke-width'] : 2,
     };
+  }
+
+  private featureFilter(feature): boolean{
+    if(feature.geometry.type === "Point") {
+      return false;
+    }
+    return true;
   }
 
   onMapReady(map: L.Map) {

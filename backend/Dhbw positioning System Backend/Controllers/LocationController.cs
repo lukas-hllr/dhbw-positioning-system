@@ -17,16 +17,18 @@ namespace Dhbw_positioning_System_Backend.Controllers
     public class LocationController : ControllerBase
     {
         private readonly DhbwPositioningSystemDBContext _context;
+        private readonly RayCastingAlgorithm rc;
 
         public LocationController(DhbwPositioningSystemDBContext context)
         {
             _context = context;
+            rc = new RayCastingAlgorithm();
         }
 
         // POST: getLocation
         [HttpPost]
 
-        public ActionResult<PositionDto> GetLocation(IEnumerable<MeasurementEntityDto> aps)
+        public ActionResult<LocationDto> GetLocation(IEnumerable<MeasurementEntityDto> aps)
         {
 
             List<MeasurementEntityDto> aps_filtered = this.ExcludeDuplicates(aps);
@@ -58,13 +60,16 @@ namespace Dhbw_positioning_System_Backend.Controllers
                 distances.ToArray<double>(),
                 5
             );
-            
-            return new PositionDto(result.Latitude, result.Longitude, -1, 1);
+
+            var room = rc.GetRoom(result);
+            var closestDoor = rc.GetClosestDoor(result);
+
+            return new LocationDto(result.Latitude, result.Longitude, -1, 1, room, closestDoor);
         }
 
         /*
             Priorise 5GHz Networks and filter out
-            duplicate 2.4Ghz Networks
+            redundant 2.4Ghz Networks
         */
         private List<MeasurementEntityDto> ExcludeDuplicates(IEnumerable<MeasurementEntityDto> aps){
             aps = aps.OrderByDescending(ap => ap.Ssid);

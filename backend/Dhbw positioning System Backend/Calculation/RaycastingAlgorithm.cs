@@ -24,6 +24,11 @@ public class RayCastingAlgorithm
             .ToList();
     }
 
+    public string GetClosestDoor(GeoCoordinate point)
+    {
+        return "tbd";
+    }
+
     public string GetRoom(GeoCoordinate point)
     {
         foreach (Feature feature in geoData)
