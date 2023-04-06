@@ -84,6 +84,15 @@ public class Tests
     }
 
     [Test]
+    public void TestClostestDoor()
+    {
+        RayCastingAlgorithm rc = new RayCastingAlgorithm();
+        GeoCoordinate audimax = new GeoCoordinate(49.02700149361377, 8.385664256051086);
+        string result = rc.GetClosestDoor(audimax);
+        Assert.That(result, Is.EqualTo("audimax"));
+    }
+
+    [Test]
     public void TestRayCastingWithPointInAudimax()
     {
         RayCastingAlgorithm rc = new RayCastingAlgorithm();

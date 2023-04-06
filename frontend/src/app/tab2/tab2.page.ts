@@ -5,6 +5,7 @@ import {ApiService} from "../services/api-service/api.service";
 import {first} from "rxjs/operators";
 import {PositionModel} from "../model/position.model";
 import {ApScanService} from "../services/ap-scan-service/ap-scan.service";
+import { LocationModel } from '../model/location.model';
 
 @Component({
   selector: 'app-tab2',
@@ -89,21 +90,21 @@ export class Tab2Page implements AfterViewInit {
 
   private refresh(): void {
     this.apScanService.scan().then(() => {
-        this.apiService.getPosition(
+        this.apiService.getLocation(
           this.apScanService.scanResult.getValue().measurements
         ).pipe(first()).subscribe(
-          position => this.setPosMarker(position)
+          location => this.setPosMarker(location)
         );
       }
     );
   }
 
-  private setPosMarker(pos: PositionModel): void {
+  private setPosMarker(pos: LocationModel): void {
     if (this.locationMarker) this.map.removeLayer(this.locationMarker);
     if (this.locationAccuracy) this.map.removeLayer(this.locationAccuracy);
 
     this.locationMarker = L.marker([pos.latitude, pos.longitude]).addTo(this.map)
-      .bindPopup('You are within ' + pos.accuracy + ' meters from this point').openPopup();
+      .bindPopup(`You are within ${pos.accuracy} meters from this point.<br>Closest Door: ${pos.closestDoor}<br>Room: ${pos.room}`).openPopup();
 
     this.locationAccuracy = L.circle([pos.latitude, pos.longitude], pos.accuracy / 2).addTo(this.map);
   }

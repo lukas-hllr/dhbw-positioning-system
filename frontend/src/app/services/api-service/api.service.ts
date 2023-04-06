@@ -7,6 +7,7 @@ import {map} from 'rxjs/operators';
 import {MeasurementEntity} from '../../model/measurement-entity';
 import {PositionModel} from "../../model/position.model";
 import {MeasurementBackendModel} from "../../model/measurement-backend.model";
+import { LocationModel } from 'src/app/model/location.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +31,9 @@ export class ApiService {
       }));
   }
 
-  public getPosition(scan: MeasurementEntity[]): Observable<PositionModel> {
+  public getLocation(scan: MeasurementEntity[]): Observable<LocationModel> {
     this.$sending.next(true);
-    return this.http.post<PositionModel>(`${environment.apiUrl}/location`, scan)
+    return this.http.post<LocationModel>(`${environment.apiUrl}/location`, scan)
       .pipe(map(p => {
         this.$sending.next(false);
         return p;

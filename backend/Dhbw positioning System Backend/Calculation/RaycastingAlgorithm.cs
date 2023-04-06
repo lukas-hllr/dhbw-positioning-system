@@ -13,6 +13,7 @@ namespace Dhbw_positioning_System_Backend.Calculation;
 public class RayCastingAlgorithm
 {
     List<Feature> geoData;
+    List<Feature> doors;
     public RayCastingAlgorithm()
     {
         string fileName = Path.Join(Directory.GetCurrentDirectory(), "2og_cal.json");
@@ -22,11 +23,22 @@ public class RayCastingAlgorithm
             .Where(e => e.Geometry is Polygon)
             .Where(e => e.Properties.ContainsKey("room"))
             .ToList();
+        doors = featureCollection.Features
+            .Where(e => e.Geometry is Point)
+            .Where(e => e.Properties.ContainsKey("room"))
+            .Where(e => e.Properties["room"] != null)
+            .ToList();
     }
 
     public string GetClosestDoor(GeoCoordinate point)
     {
-        return "tbd";
+        var dic = doors.ToDictionary(d => d.Properties["room"] as string, d => {
+            var ct = (d.Geometry as Point)
+                .Coordinates;
+            return point.GetDistanceTo(new GeoCoordinate(ct.Latitude, ct.Longitude));
+        });
+
+        return dic.OrderBy(d => d.Value).First().Key;
     }
 
     public string GetRoom(GeoCoordinate point)
