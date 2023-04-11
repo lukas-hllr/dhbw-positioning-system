@@ -40,7 +40,7 @@ public class Multilateration
     
     private double MeanSquaredError(GeoCoordinate estimatedLocation)
     {
-        int n = this._knownRouter.Length;
+        int n = _knownRouter.Length;
         double result = 0.0;
 
         for (int i = 0; i < n; i++)
@@ -50,5 +50,18 @@ public class Multilateration
         }
         return result/n;
     }
+
+    public double Error(GeoCoordinate location)
+    {
+        int n = _knownRouter.Length;
+        double result = 0.0;
+
+        for (int i = 0; i < n; i++)
+        {
+            double estimatedDistance = location.GetDistanceTo(_knownRouter[i]);
+            result += Math.Abs(estimatedDistance - _distances[i]);
+        }
+        return result/n;
+    } 
     
 }

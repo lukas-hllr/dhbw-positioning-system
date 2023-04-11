@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using Dhbw_positioning_System_Backend.Model;
 using Dhbw_positioning_System_Backend.Model.dto;
 using Dhbw_positioning_System_Backend.Calculation;
@@ -17,12 +15,12 @@ namespace Dhbw_positioning_System_Backend.Controllers
     public class LocationController : ControllerBase
     {
         private readonly DhbwPositioningSystemDBContext _context;
-        private readonly RayCastingAlgorithm rc;
+        private readonly RayCastingAlgorithm _rayCastingAlgorithm;
 
-        public LocationController(DhbwPositioningSystemDBContext context)
+        public LocationController(DhbwPositioningSystemDBContext context,RayCastingAlgorithm rayCastingAlgorithm)
         {
             _context = context;
-            rc = new RayCastingAlgorithm();
+            _rayCastingAlgorithm = rayCastingAlgorithm;
         }
 
         // POST: getLocation
@@ -31,12 +29,12 @@ namespace Dhbw_positioning_System_Backend.Controllers
         public ActionResult<LocationDto> GetLocation(IEnumerable<MeasurementEntityDto> aps)
         {
 
-            List<MeasurementEntityDto> aps_filtered = this.ExcludeDuplicates(aps);
+            List<MeasurementEntityDto> apsFiltered = this.ExcludeDuplicates(aps);
 
             List<double> distances = new List<double>();
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
 
-            foreach (MeasurementEntityDto ap in aps_filtered)
+            foreach (MeasurementEntityDto ap in apsFiltered)
             {
                 AccessPoint correspondingAp = _context.AccessPoint.Find(
                     ap.Mac.Remove(16, 1).ToLower() + "0"
@@ -49,26 +47,23 @@ namespace Dhbw_positioning_System_Backend.Controllers
                 }
             }
 
-            if (distances.Count<double>() < 3)
+            if (distances.Count < 3)
             {
-                return BadRequest("Trilateration requires at least 3 distinct and registered datapoints.");
+                return BadRequest("Trilateration requires at least 3 distinct and registered data points.");
             }
 
 
-            GeoCoordinate result = Trilateration.IterativeIntersection(
-                coordinates.ToArray<GeoCoordinate>(),
-                distances.ToArray<double>(),
-                5
-            );
-
-            var room = rc.GetRoom(result);
-            var closestDoor = rc.GetClosestDoor(result);
-
-            return new LocationDto(result.Latitude, result.Longitude, -1, 1, room, closestDoor);
+            Multilateration calculator = new Multilateration(coordinates.ToArray(), distances.ToArray());
+            GeoCoordinate result = calculator.FindOptimalLocation();
+            double accuracy = calculator.Error(result);
+            var room = _rayCastingAlgorithm.GetRoom(result);
+            var closestDoor = _rayCastingAlgorithm.GetClosestDoor(result);
+            
+            return new LocationDto(result.Latitude, result.Longitude, -1, accuracy, room, closestDoor);
         }
 
         /*
-            Priorise 5GHz Networks and filter out
+            Prioritize 5GHz Networks and filter out
             redundant 2.4Ghz Networks
         */
         private List<MeasurementEntityDto> ExcludeDuplicates(IEnumerable<MeasurementEntityDto> aps){
@@ -79,11 +74,11 @@ namespace Dhbw_positioning_System_Backend.Controllers
             
             foreach (MeasurementEntityDto ap in aps)
             {
-                string current_mac = ap.Mac.Remove(16, 1).ToLower();
+                string currentMac = ap.Mac.Remove(16, 1).ToLower();
 
-                if (!macs.Contains(current_mac)){
+                if (!macs.Contains(currentMac)){
                     filtered.Add(ap);
-                    macs.Add(current_mac);
+                    macs.Add(currentMac);
                 }
             }
 

@@ -1,3 +1,4 @@
+using Dhbw_positioning_System_Backend.Calculation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace Dhbw_positioning_System_Backend
                 options.UseLazyLoadingProxies();
             });
             services.AddControllers();
+            services.AddSingleton(new RayCastingAlgorithm());
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "CORS",

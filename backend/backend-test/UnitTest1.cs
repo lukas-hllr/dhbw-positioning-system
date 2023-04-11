@@ -1,3 +1,4 @@
+using System.Data.SQLite;
 using System.Runtime.Intrinsics.Arm;
 using Dhbw_positioning_System_Backend.Calculation;
 using Dhbw_positioning_System_Backend.Model;
@@ -10,6 +11,15 @@ using NUnit.Framework;
 
 public class Tests
 {
+    private SQLiteConnection database;
+
+    [SetUp]
+    public void SetUp()
+    {
+        database = new SQLiteConnection("Data Source=DhbwPositioningSystemDB.db");
+    } 
+    
+    
     [Test]
     public void TestLateration()
     {
