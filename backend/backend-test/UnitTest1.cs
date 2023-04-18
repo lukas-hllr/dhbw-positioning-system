@@ -1,9 +1,12 @@
+using System.Configuration;
 using System.Data.SQLite;
 using System.Runtime.Intrinsics.Arm;
+using Dhbw_positioning_System_Backend;
 using Dhbw_positioning_System_Backend.Calculation;
 using Dhbw_positioning_System_Backend.Model;
 using Dhbw_positioning_System_Backend.Model.dto;
 using GeoCoordinatePortable;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend_test;
 
@@ -11,12 +14,14 @@ using NUnit.Framework;
 
 public class Tests
 {
-    private SQLiteConnection database;
+    private DhbwPositioningSystemDBContext _context;
 
     [SetUp]
     public void SetUp()
     {
-        database = new SQLiteConnection("Data Source=DhbwPositioningSystemDB.db");
+        var optionsBuilder = new DbContextOptionsBuilder<DhbwPositioningSystemDBContext>();
+        optionsBuilder.UseSqlite("Filename = DhbwPositioningSystemDB.db");
+        _context = new DhbwPositioningSystemDBContext(optionsBuilder.Options);
     } 
     
     
@@ -120,6 +125,13 @@ public class Tests
         Assert.That(result, Is.Null);
     }
 
+    [Test]
+    public void TestDBConnection()
+    {
+        Console.WriteLine(_context.Database.CanConnect());
+        _context.Database.OpenConnection();
+        Console.WriteLine(_context.Database.CanConnect());
+    }
 
     [Test]
     public void AbusingAsAMain()
