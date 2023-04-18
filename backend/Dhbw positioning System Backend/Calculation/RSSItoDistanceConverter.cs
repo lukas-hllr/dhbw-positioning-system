@@ -11,10 +11,11 @@ public class RSSItoDistanceConverter
     private const double RssiAtOneMeter5GHz = -24; //Measured reference-RSSI at a distance of 1m  
     public static double Convert(MeasurementEntityDto ap)
     {
-        if(ap.Ssid.Equals("DHBW-KA5")){
-            return Math.Pow(10, (RssiAtOneMeter5GHz - ap.Rssi) / (10 * SignalPropagation5GHz));
-        } else {
-            return Math.Pow(10, (RssiAtOneMeter24GHz - ap.Rssi) / (10 * SignalPropagation24GHz));
-        }
+        //if(ap.Ssid.Equals("DHBW-KA5")){
+        //    return Math.Pow(10, (RssiAtOneMeter5GHz - ap.Rssi) / (10 * SignalPropagation5GHz));
+        //} else {
+        //    return Math.Pow(10, (RssiAtOneMeter24GHz - ap.Rssi) / (10 * SignalPropagation24GHz));
+        //}
+        return 0.00001 * Math.Pow(ap.Rssi * -1, 3.5537);
     }
 }
