@@ -1,9 +1,5 @@
-using System.Configuration;
-using System.Data.SQLite;
-using System.Runtime.Intrinsics.Arm;
 using Dhbw_positioning_System_Backend;
 using Dhbw_positioning_System_Backend.Calculation;
-using Dhbw_positioning_System_Backend.Model;
 using Dhbw_positioning_System_Backend.Model.dto;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +12,15 @@ public class Tests
 {
     private DhbwPositioningSystemDBContext _context;
 
+    //CAREFUL, WORKING WITH PRODUCTION DB!!! TRY TO READ ONLY!!!
     [SetUp]
     public void SetUp()
     {
-        var optionsBuilder = new DbContextOptionsBuilder<DhbwPositioningSystemDBContext>();
-        optionsBuilder.UseSqlite("Filename = DhbwPositioningSystemDB.db");
-        _context = new DhbwPositioningSystemDBContext(optionsBuilder.Options);
+        var optionsBuilder = new DbContextOptionsBuilder<DhbwPositioningSystemDBContext>()
+            .UseSqlite("Data Source=..\\..\\..\\..\\Dhbw positioning System Backend\\DhbwPositioningSystemDB.db")//Standart Path is in dhbw-positioning-system\backend\backend-test\bin\Debug\net6.0 which is fucked, Idk how to fix so thats why weird navigation.
+            .Options;
+        _context = new DhbwPositioningSystemDBContext(optionsBuilder);
+        _context.Database.OpenConnection();
     } 
     
     
@@ -104,7 +103,7 @@ public class Tests
         RayCastingAlgorithm rc = new RayCastingAlgorithm();
         GeoCoordinate audimax = new GeoCoordinate(49.02700149361377, 8.385664256051086);
         string result = rc.GetClosestDoor(audimax);
-        Assert.That(result, Is.EqualTo("audimax"));
+        Assert.That(result, Is.EqualTo("audimax-window-north"));
     }
 
     [Test]
@@ -128,9 +127,8 @@ public class Tests
     [Test]
     public void TestDBConnection()
     {
-        Console.WriteLine(_context.Database.CanConnect());
-        _context.Database.OpenConnection();
-        Console.WriteLine(_context.Database.CanConnect());
+        Console.WriteLine(_context.AccessPoint.Count());
+        Assert.That(_context.AccessPoint.Count(),Is.AtLeast(1));
     }
 
     [Test]
