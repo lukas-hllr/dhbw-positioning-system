@@ -3,7 +3,7 @@ using Dhbw_positioning_System_Backend.Model.dto;
 
 namespace Dhbw_positioning_System_Backend.Calculation;
 
-public class RSSItoDistanceConverter
+public static class RSSItoDistanceConverter
 {
     private const double SignalPropagation24GHz = 3.0; //Usually between 2 and 4.3, has to be tested.  
     private const double SignalPropagation5GHz = 3.0; //Usually between 2 and 4.3, has to be tested.  

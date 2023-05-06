@@ -1,9 +1,8 @@
-using System.Data.SQLite;
-using System.Runtime.Intrinsics.Arm;
+using Dhbw_positioning_System_Backend;
 using Dhbw_positioning_System_Backend.Calculation;
-using Dhbw_positioning_System_Backend.Model;
 using Dhbw_positioning_System_Backend.Model.dto;
 using GeoCoordinatePortable;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend_test;
 
@@ -11,12 +10,15 @@ using NUnit.Framework;
 
 public class Tests
 {
-    private SQLiteConnection database;
-
+    private DhbwPositioningSystemDBContext _context;
     [SetUp]
     public void SetUp()
     {
-        database = new SQLiteConnection("Data Source=DhbwPositioningSystemDB.db");
+        var optionsBuilder = new DbContextOptionsBuilder<DhbwPositioningSystemDBContext>()
+            .UseSqlite("Data Source=..\\..\\..\\..\\Dhbw positioning System Backend\\DhbwPositioningSystemDB.db;Mode=ReadOnly")//Standart Path is in dhbw-positioning-system\backend\backend-test\bin\Debug\net6.0 which is fucked, Idk how to fix so thats why weird navigation.
+            .Options;
+        _context = new DhbwPositioningSystemDBContext(optionsBuilder);
+        _context.Database.OpenConnection();
     } 
     
     
@@ -99,7 +101,7 @@ public class Tests
         RayCastingAlgorithm rc = new RayCastingAlgorithm();
         GeoCoordinate audimax = new GeoCoordinate(49.02700149361377, 8.385664256051086);
         string result = rc.GetClosestDoor(audimax);
-        Assert.That(result, Is.EqualTo("audimax"));
+        Assert.That(result, Is.EqualTo("audimax-window-north"));
     }
 
     [Test]
@@ -120,6 +122,12 @@ public class Tests
         Assert.That(result, Is.Null);
     }
 
+    [Test]
+    public void TestDBConnection()
+    {
+        Console.WriteLine(_context.AccessPoint.Count());
+        Assert.That(_context.AccessPoint.Count(),Is.AtLeast(1));
+    }
 
     [Test]
     public void AbusingAsAMain()

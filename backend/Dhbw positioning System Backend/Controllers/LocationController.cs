@@ -29,8 +29,7 @@ namespace Dhbw_positioning_System_Backend.Controllers
         public ActionResult<LocationDto> GetLocation(IEnumerable<MeasurementEntityDto> aps)
         {
 
-            List<MeasurementEntityDto> apsFiltered = this.ExcludeDuplicates(aps);
-
+            List<MeasurementEntityDto> apsFiltered = ExcludeDuplicates(aps);
             List<double> distances = new List<double>();
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
 
@@ -40,24 +39,20 @@ namespace Dhbw_positioning_System_Backend.Controllers
                     ap.Mac.Remove(16, 1).ToLower() + "0"
                 );
 
-                if (correspondingAp != null)
-                {
-                    distances.Add(RSSItoDistanceConverter.Convert(ap));
-                    coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
-                }
+                if (correspondingAp == null) continue;
+                distances.Add(RSSItoDistanceConverter.Convert(ap));
+                coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
             }
-
+            
             if (distances.Count < 3)
             {
                 return BadRequest("Trilateration requires at least 3 distinct and registered data points.");
             }
-
-
             Multilateration calculator = new Multilateration(coordinates.ToArray(), distances.ToArray());
             GeoCoordinate result = calculator.FindOptimalLocation();
             double accuracy = calculator.Error(result);
-            var room = _rayCastingAlgorithm.GetRoom(result);
-            var closestDoor = _rayCastingAlgorithm.GetClosestDoor(result);
+            string room = _rayCastingAlgorithm.GetRoom(result);
+            string closestDoor = _rayCastingAlgorithm.GetClosestDoor(result);
             
             return new LocationDto(result.Latitude, result.Longitude, -1, accuracy, room, closestDoor);
         }
