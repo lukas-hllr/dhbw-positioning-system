@@ -49,7 +49,7 @@ namespace Dhbw_positioning_System_Backend.Controllers
                 return BadRequest("Trilateration requires at least 3 distinct and registered data points.");
             }
             Multilateration calculator = new Multilateration(coordinates.ToArray(), distances.ToArray());
-            GeoCoordinate result = calculator.FindOptimalLocation();
+            GeoCoordinate result = calculator.FindOptimalLocationLBFGS();
             double accuracy = calculator.Error(result);
             string room = _rayCastingAlgorithm.GetRoom(result);
             string closestDoor = _rayCastingAlgorithm.GetClosestDoor(result);

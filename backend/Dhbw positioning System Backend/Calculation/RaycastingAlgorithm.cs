@@ -60,10 +60,8 @@ public class RayCastingAlgorithm
     public static bool CheckIfInside(List<IPosition> room, GeoCoordinate point)
     {
         int count = room.Count;
-
         double x = point.Longitude;
         double y = point.Latitude;
-
         bool inside = false;
         for (int i = 0, j = count - 1; i < count; j = i++)
         {
@@ -78,7 +76,6 @@ public class RayCastingAlgorithm
                 inside = !inside;
             }
         }
-
         return inside;
     }
 }
