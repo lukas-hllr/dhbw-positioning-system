@@ -22,29 +22,11 @@ public class Multilateration
         alglib.minlmstate state;
         alglib.minlmreport rep;
 
-        //
-        // Create optimizer, tell it to:
-        // * use numerical differentiation with step equal to 0.0001
-        // * use unit scale for all variables (s is a unit vector)
-        // * stop after short enough step (less than epsx)
-        //
         alglib.minlmcreatev(_knownRouter.Length, x, 0.0001, out state);
         alglib.minlmsetcond(state, epsx, maxits);
         alglib.minlmsetscale(state, s);
-
-        //
-        // Optimize
-        //
+        
         alglib.minlmoptimize(state, ErrorFunctionLM, null, null);
-
-        //
-        // Test optimization results
-        //
-        // NOTE: because we use numerical differentiation, we do not
-        //       verify Jacobian correctness - it is always "correct".
-        //       However, if you switch to analytic gradient, consider
-        //       checking it with OptGuard (see other examples).
-        //
         alglib.minlmresults(state, out x, out rep);
         
         GeoCoordinate result = new GeoCoordinate(x[0], x[1]);
