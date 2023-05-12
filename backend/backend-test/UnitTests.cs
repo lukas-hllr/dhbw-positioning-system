@@ -150,7 +150,7 @@ public class Tests
     [Test]
     public void TestDBConnection()
     {
-        Console.WriteLine(_context.AccessPoint.Count());
+        Console.WriteLine(_context.Measurement.Count());
         Assert.That(_context.AccessPoint.Count(),Is.AtLeast(1));
     }
 
