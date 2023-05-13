@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using Dhbw_positioning_System_Backend;
 using Dhbw_positioning_System_Backend.Calculation;
 using Dhbw_positioning_System_Backend.Model;
@@ -31,31 +32,42 @@ public class AnalyseData
     }
 
     [Test]
-    public void testAlgorithms()
+    public void testAlgorithmPerformance()
+    {
+        Random random = new Random();
+        int randomMeasurement = random.Next(_context.Measurement.Count());
+        ExtractDistancesAndAps(randomMeasurement, out var distances, out var coordinates);
+        Multilateration multilateration = new Multilateration(coordinates.ToArray(), distances.ToArray());
+
+        Benchmark(() => { multilateration.FindOptimalLocationLBFGS(); }, 100000);
+        Benchmark(() => { multilateration.FindOptimalLocationLM(); }, 100000);
+    }
+    private static void Benchmark(Action act, int iterations)
+    {
+        GC.Collect();
+        act.Invoke(); // run once outside of loop to avoid initialization costs
+        Stopwatch sw = Stopwatch.StartNew();
+        for (int i = 0; i < iterations; i++)
+        {
+            act.Invoke();
+        }
+        sw.Stop();
+        Console.WriteLine((sw.ElapsedMilliseconds / (iterations+0.0)).ToString());
+    }
+
+    [Test]
+    public void testAlgorithmsAccuracy()
     {
         var measurements = _context.Measurement.ToList();
         List<GeoCoordinate> gTList = new List<GeoCoordinate>();
         List<GeoCoordinate> LMList = new List<GeoCoordinate>();
         List<GeoCoordinate> BFSGList = new List<GeoCoordinate>();
-
-
+        
         foreach (var m in measurements)
         {
-            List<MeasurementEntity> dataPoints = ExcludeDuplicates(_context.MeasurementEntity.Where(mE=>mE.MeasurementId == m.MeasurementId));
-            List<double> distances = new List<double>();
-            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-            foreach (MeasurementEntity ap in dataPoints)
-            {
-                AccessPoint? correspondingAp = _context.AccessPoint.Find(
-                    ap.Mac.Remove(16, 1).ToLower() + "0"
-                );
+            ExtractDistancesAndAps(m.MeasurementId, out var distances, out var coordinates);
 
-                if (correspondingAp == null) continue;
-                distances.Add(0.00001 * Math.Pow(ap.Rssi * -1, 3.5537)); //Konvertierung von RSSI zu Distanz
-                coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
-            }
-
-            if (dataPoints.Count < 3) continue;
+            if (coordinates.Count < 3) continue;
             Multilateration multilateration = new Multilateration(coordinates.ToArray(), distances.ToArray());
             var resultLM = multilateration.FindOptimalLocationLM();
             var resultBFGS = multilateration.FindOptimalLocationLBFGS();
@@ -74,6 +86,24 @@ public class AnalyseData
         for (int i = 0; i < LMList.Count; i++)
         {
             Console.WriteLine(LMList[i].GetDistanceTo(gTList[i]));
+        }
+    }
+
+    private void ExtractDistancesAndAps(long measurementId, out List<double> distances, out List<GeoCoordinate> coordinates)
+    {
+        List<MeasurementEntity> dataPoints =
+            ExcludeDuplicates(_context.MeasurementEntity.Where(mE => mE.MeasurementId == measurementId));
+        distances = new List<double>();
+        coordinates = new List<GeoCoordinate>();
+        foreach (MeasurementEntity ap in dataPoints)
+        {
+            AccessPoint? correspondingAp = _context.AccessPoint.Find(
+                ap.Mac.Remove(16, 1).ToLower() + "0"
+            );
+
+            if (correspondingAp == null) continue;
+            distances.Add(0.00001 * Math.Pow(ap.Rssi * -1, 3.5537)); //Konvertierung von RSSI zu Distanz
+            coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
         }
     }
 
