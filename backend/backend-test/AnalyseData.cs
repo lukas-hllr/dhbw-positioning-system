@@ -102,7 +102,7 @@ public class AnalyseData
             );
 
             if (correspondingAp == null) continue;
-            distances.Add(0.00001 * Math.Pow(ap.Rssi * -1, 3.5537)); //Konvertierung von RSSI zu Distanz
+            distances.Add(RSSItoDistanceConverter.ConvertWithRegression(ap.Rssi)); //Konvertierung von RSSI zu Distanz
             coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
         }
     }
