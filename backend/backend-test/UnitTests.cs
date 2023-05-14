@@ -115,7 +115,7 @@ public class Tests
             Rssi = -87,
             Ssid = "DHBW-KA5"
         };
-        var result = RSSItoDistanceConverter.Convert(dp);
+        var result = RSSItoDistanceConverter.ConvertWithRegression(dp.Rssi);
         Console.WriteLine(result);
         Assert.That(result, Is.Positive);
     }
