@@ -154,7 +154,7 @@ public class AnalyseData
     {
         var filePath = Path.Join(Directory.GetParent(Path.GetDirectoryName(TestContext.CurrentContext.TestDirectory)).Parent.FullName, "results.csv");
         var csv = new StringBuilder();
-        var csvHeader = "lat,lng,latCalculated,lngCalculated,accCalculated,distanceToCalculated,latLocationServices,lngLocationServices,accCalculated,distanceToLocationServices";
+        var csvHeader = "lat;lng;latCalculated;lngCalculated;accCalculated;distanceToCalculated;latLocationServices;lngLocationServices;accCalculated;distanceToLocationServices";
         csv.AppendLine(csvHeader);
 
         var groundTruthList = res["groundTruth"]! as List<GeoCoordinate>;
@@ -166,7 +166,7 @@ public class AnalyseData
         for (int i = 0; i < groundTruthList.Count; i++)
         {
             var newLine = string.Format(
-                "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
+                "{0};{1};{2};{3};{4};{5};{6};{7};{8};{9}",
                 groundTruthList.ElementAt(i).Latitude,
                 groundTruthList.ElementAt(i).Longitude,
                 calculatedList.ElementAt(i).Latitude,
