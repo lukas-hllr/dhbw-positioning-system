@@ -36,7 +36,7 @@ public class AnalyseData
     {
         Random random = new Random();
         int randomMeasurement = random.Next(_context.Measurement.Count());
-        ExtractDistancesAndAps(randomMeasurement, out var distances, out var coordinates);
+        ExtractDistancesAndAps(1, out var distances, out var coordinates);
         Multilateration multilateration = new Multilateration(coordinates.ToArray(), distances.ToArray());
 
         Benchmark(() => { multilateration.FindOptimalLocationLBFGS(); }, 100000);
