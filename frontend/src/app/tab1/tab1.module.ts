@@ -7,6 +7,7 @@ import { ExploreContainerComponentModule } from '../explore-container/explore-co
 
 import { Tab1PageRoutingModule } from './tab1-routing.module';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ExploreContainerComponentModule,
     Tab1PageRoutingModule,
     MatExpansionModule,
+    MatButtonModule
   ],
   declarations: [Tab1Page]
 })
