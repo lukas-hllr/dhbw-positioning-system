@@ -39,8 +39,8 @@ namespace Dhbw_positioning_System_Backend.Controllers
 
                 if (correspondingAp == null) continue;
                 distances.Add(ap.Ssid.Equals("DHBW-KA5")
-                    ? RSSItoDistanceConverter.ConvertWithFormula5G(ap.Rssi)
-                    : RSSItoDistanceConverter.ConvertWithFormula2G(ap.Rssi));
+                    ? RSSItoDistanceConverter.ConvertWithOptimizedFormula5G(ap.Rssi)
+                    : RSSItoDistanceConverter.ConvertWithOptimizedFormula2G(ap.Rssi));
 
 
                 coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));

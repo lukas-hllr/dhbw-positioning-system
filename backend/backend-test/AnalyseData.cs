@@ -133,7 +133,18 @@ public class AnalyseData
 
         var res = calcDbMeasurements();
 
-        Assert.AreEqual(0, 0);
+        var groundTruthList = res["groundTruth"]! as List<GeoCoordinate>;
+        var calculatedList = res["calculated"]! as List<LocationDto>;
+        var locationServicesList = res["locationServices"] as List<GeoCoordinate>;
+        var distanceToCalculatedList = res["distanceToCalculated"] as List<double>;
+        var distanceToLocationServicesList = res["distanceToLocationServices"] as List<double>;
+
+        System.Console.WriteLine(distanceToCalculatedList.Average());
+        System.Console.WriteLine(distanceToLocationServicesList.Average());
+
+
+        Assert.IsTrue(distanceToCalculatedList.Average() <= 9.494178497080012);
+
     }
 
     private Dictionary<string, dynamic> calcDbMeasurements(bool writeCsv = true){
@@ -161,8 +172,8 @@ public class AnalyseData
             groundTruthList.Add(groundTruth);
             locationServicesList.Add(locationServices);
             calculatedList.Add(calculated);
-            distanceToCalculatedList.Add(new GeoCoordinate(calculated.Latitude, calculated.Longitude).GetDistanceTo(groundTruth));
-            distanceToLocationServicesList.Add(new GeoCoordinate(calculated.Latitude, calculated.Longitude).GetDistanceTo(locationServices));
+            distanceToCalculatedList.Add(groundTruth.GetDistanceTo(new GeoCoordinate(calculated.Latitude, calculated.Longitude)));
+            distanceToLocationServicesList.Add(groundTruth.GetDistanceTo(locationServices));
 
         }
 
