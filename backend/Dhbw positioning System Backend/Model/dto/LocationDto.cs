@@ -2,7 +2,6 @@
 {
     public class LocationDto : PositionDto
     {
-        public LocationDto(){}
         public LocationDto(double lat, double lon, double alt, double acc, string room, string closestDoor){
             this.Latitude = lat;
             this.Longitude = lon;

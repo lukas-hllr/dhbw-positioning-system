@@ -21,9 +21,9 @@ namespace Dhbw_positioning_System_Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             string connectionString = "DhbwPositioningSystemDB.db";
-            services.AddDbContext<DhbwPositioningSystemDBContext>(options => {
+            services.AddDbContext<DhbwPositioningSystemDBContext>(options =>
+            {
                 options.UseSqlite("Filename=" + connectionString);
                 options.UseLazyLoadingProxies();
             });
@@ -32,21 +32,19 @@ namespace Dhbw_positioning_System_Backend
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "CORS",
-                    policy  =>
+                    policy =>
                     {
                         policy
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                      });
-});
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //TODO Enable CORS
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -60,11 +58,7 @@ namespace Dhbw_positioning_System_Backend
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-            
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

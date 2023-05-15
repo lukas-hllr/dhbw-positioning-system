@@ -1,9 +1,8 @@
-using System.Data.SQLite;
-using System.Runtime.Intrinsics.Arm;
+using Dhbw_positioning_System_Backend;
 using Dhbw_positioning_System_Backend.Calculation;
-using Dhbw_positioning_System_Backend.Model;
 using Dhbw_positioning_System_Backend.Model.dto;
 using GeoCoordinatePortable;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend_test;
 
@@ -11,12 +10,15 @@ using NUnit.Framework;
 
 public class Tests
 {
-    private SQLiteConnection database;
-
+    private DhbwPositioningSystemDBContext _context;
     [SetUp]
     public void SetUp()
     {
-        database = new SQLiteConnection("Data Source=DhbwPositioningSystemDB.db");
+        var optionsBuilder = new DbContextOptionsBuilder<DhbwPositioningSystemDBContext>()
+            .UseSqlite("Data Source=..\\..\\..\\..\\Dhbw positioning System Backend\\DhbwPositioningSystemDB.db;Mode=ReadOnly")//Standart Path is in dhbw-positioning-system\backend\backend-test\bin\Debug\net6.0 which is fucked, Idk how to fix so thats why weird navigation.
+            .Options;
+        _context = new DhbwPositioningSystemDBContext(optionsBuilder);
+        _context.Database.OpenConnection();
     } 
     
     
@@ -49,14 +51,14 @@ public class Tests
 
         double[] distances = new double[] { 5, 10, 18 };
         Multilateration multilateration = new Multilateration(knownRoutersGeoCord, distances);
-        var result = multilateration.FindOptimalLocation();
+        var result = multilateration.FindOptimalLocationLBFGS();
         Console.WriteLine(result);
         Assert.That(result.Latitude, Is.EqualTo(49.027217178260145).Within(0.0001));
         Assert.That(result.Longitude, Is.EqualTo(8.38570374903793).Within(0.0001));
     }
 
     [Test]
-    public void TestLateration3()
+    public void TestLaterationLBFGS3()
     {
         GeoCoordinate[] knownRoutersGeoCord =
         {
@@ -74,7 +76,32 @@ public class Tests
             125.89254117941675
         };
         Multilateration multilateration = new Multilateration(knownRoutersGeoCord, distances);
-        var result = multilateration.FindOptimalLocation();
+        var result = multilateration.FindOptimalLocationLBFGS();
+        Console.WriteLine(result);
+        Assert.That(result.Latitude, Is.EqualTo(49.02751575703979).Within(0.0001));
+        Assert.That(result.Longitude, Is.EqualTo(8.386484553128351).Within(0.0001));
+    }
+    
+    [Test]
+    public void TestLaterationLM3()
+    {
+        GeoCoordinate[] knownRoutersGeoCord =
+        {
+            new GeoCoordinate(49.0272880184736, 8.38570350114179),
+            new GeoCoordinate(49.0273064641865, 8.38550658162981),
+            new GeoCoordinate(49.0271643231129, 8.38584581316988),
+            new GeoCoordinate(49.0273249104467, 8.38533117269256),
+            new GeoCoordinate(49.0271523880134, 8.38526332626088),
+            new GeoCoordinate(49.0271380365763, 8.38539400717443),
+        };
+
+        double[] distances = new double[]
+        {
+            5.843414133735177, 58.434141337351754, 58.434141337351754, 107.97751623277094, 116.59144011798323,
+            125.89254117941675
+        };
+        Multilateration multilateration = new Multilateration(knownRoutersGeoCord, distances);
+        var result = multilateration.FindOptimalLocationLM();
         Console.WriteLine(result);
         Assert.That(result.Latitude, Is.EqualTo(49.02751575703979).Within(0.0001));
         Assert.That(result.Longitude, Is.EqualTo(8.386484553128351).Within(0.0001));
@@ -88,7 +115,7 @@ public class Tests
             Rssi = -87,
             Ssid = "DHBW-KA5"
         };
-        var result = RSSItoDistanceConverter.Convert(dp);
+        var result = RSSItoDistanceConverter.ConvertWithRegression(dp.Rssi);
         Console.WriteLine(result);
         Assert.That(result, Is.Positive);
     }
@@ -99,7 +126,7 @@ public class Tests
         RayCastingAlgorithm rc = new RayCastingAlgorithm();
         GeoCoordinate audimax = new GeoCoordinate(49.02700149361377, 8.385664256051086);
         string result = rc.GetClosestDoor(audimax);
-        Assert.That(result, Is.EqualTo("audimax"));
+        Assert.That(result, Is.EqualTo("audimax-window-north"));
     }
 
     [Test]
@@ -120,6 +147,12 @@ public class Tests
         Assert.That(result, Is.Null);
     }
 
+    [Test]
+    public void TestDBConnection()
+    {
+        Console.WriteLine(_context.Measurement.Count());
+        Assert.That(_context.AccessPoint.Count(),Is.AtLeast(1));
+    }
 
     [Test]
     public void AbusingAsAMain()

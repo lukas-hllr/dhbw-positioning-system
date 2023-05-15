@@ -17,7 +17,7 @@ namespace Dhbw_positioning_System_Backend.Controllers
         private readonly DhbwPositioningSystemDBContext _context;
         private readonly RayCastingAlgorithm _rayCastingAlgorithm;
 
-        public LocationController(DhbwPositioningSystemDBContext context,RayCastingAlgorithm rayCastingAlgorithm)
+        public LocationController(DhbwPositioningSystemDBContext context, RayCastingAlgorithm rayCastingAlgorithm)
         {
             _context = context;
             _rayCastingAlgorithm = rayCastingAlgorithm;
@@ -25,12 +25,9 @@ namespace Dhbw_positioning_System_Backend.Controllers
 
         // POST: getLocation
         [HttpPost]
-
         public ActionResult<LocationDto> GetLocation(IEnumerable<MeasurementEntityDto> aps)
         {
-
-            List<MeasurementEntityDto> apsFiltered = this.ExcludeDuplicates(aps);
-
+            List<MeasurementEntityDto> apsFiltered = ExcludeDuplicates(aps);
             List<double> distances = new List<double>();
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
 
@@ -40,11 +37,13 @@ namespace Dhbw_positioning_System_Backend.Controllers
                     ap.Mac.Remove(16, 1).ToLower() + "0"
                 );
 
-                if (correspondingAp != null)
-                {
-                    distances.Add(RSSItoDistanceConverter.Convert(ap));
-                    coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
-                }
+                if (correspondingAp == null) continue;
+                distances.Add(ap.Ssid.Equals("DHBW-KA5")
+                    ? RSSItoDistanceConverter.ConvertWithOptimizedFormula5G(ap.Rssi)
+                    : RSSItoDistanceConverter.ConvertWithOptimizedFormula2G(ap.Rssi));
+
+
+                coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
             }
 
             if (distances.Count < 3)
@@ -52,13 +51,12 @@ namespace Dhbw_positioning_System_Backend.Controllers
                 return BadRequest("Trilateration requires at least 3 distinct and registered data points.");
             }
 
-
             Multilateration calculator = new Multilateration(coordinates.ToArray(), distances.ToArray());
-            GeoCoordinate result = calculator.FindOptimalLocation();
+            GeoCoordinate result = calculator.FindOptimalLocationLBFGS();
             double accuracy = calculator.Error(result);
-            var room = _rayCastingAlgorithm.GetRoom(result);
-            var closestDoor = _rayCastingAlgorithm.GetClosestDoor(result);
-            
+            string room = _rayCastingAlgorithm.GetRoom(result);
+            string closestDoor = _rayCastingAlgorithm.GetClosestDoor(result);
+
             return new LocationDto(result.Latitude, result.Longitude, -1, accuracy, room, closestDoor);
         }
 
@@ -66,17 +64,19 @@ namespace Dhbw_positioning_System_Backend.Controllers
             Prioritize 5GHz Networks and filter out
             redundant 2.4Ghz Networks
         */
-        private List<MeasurementEntityDto> ExcludeDuplicates(IEnumerable<MeasurementEntityDto> aps){
+        private List<MeasurementEntityDto> ExcludeDuplicates(IEnumerable<MeasurementEntityDto> aps)
+        {
             aps = aps.OrderByDescending(ap => ap.Ssid);
 
             List<MeasurementEntityDto> filtered = new List<MeasurementEntityDto>();
             List<string> macs = new List<string>();
-            
+
             foreach (MeasurementEntityDto ap in aps)
             {
                 string currentMac = ap.Mac.Remove(16, 1).ToLower();
 
-                if (!macs.Contains(currentMac)){
+                if (!macs.Contains(currentMac))
+                {
                     filtered.Add(ap);
                     macs.Add(currentMac);
                 }
