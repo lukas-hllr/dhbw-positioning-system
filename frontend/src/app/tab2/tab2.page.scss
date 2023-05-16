@@ -10,10 +10,68 @@
   height: 100%;
 }
 
-#refreshButton {
+#bottomDiv {
   position: absolute;
   bottom: 30px;
   right: 15px;
-  padding: 10px;
+  left: 15px;
   z-index: 400;
+}
+
+#refreshButton {
+  float: right;
+  background-color: var(--ion-color-primary);
+}
+
+#debugSendDiv {
+  display: flex;
+  border-radius: 28px;
+  height: 56px;
+  margin-right: 71px;
+  background-color: var(--ion-color-primary);
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+}
+
+.sendClickedButton {
+  float: right;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 10px;
+  background-color: var(--ion-color-primary-contrast);
+}
+
+.sendClickedButton mat-icon {
+  color: var(--ion-color-primary);
+}
+
+#debugSendText {
+  height: 56px;
+  flex-grow: 1;
+  padding: 10px 10px 10px 25px;
+}
+
+#debugSendText p {
+  vertical-align: middle;
+  line-height: 36px;
+  font-size: 15px;
+  color: var(--ion-color-primary-contrast);
+}
+
+.pulse {
+  color: var(--ion-color-primary-contrast);
+  animation-name: pulse-color;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pulse-color {
+  0% {
+    color: var(--ion-color-primary-contrast);
+  }
+  75% {
+    color: var(--ion-color-primary);
+  }
+  100% {
+    color: var(--ion-color-primary-contrast);
+  }
 }

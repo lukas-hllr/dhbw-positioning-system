@@ -1,8 +1,40 @@
 <ion-content [fullscreen]="true">
   <div class="map-container">
     <div id="map"></div>
-    <button mat-fab id="refreshButton" color="primary" (click)="refresh()">
-      <mat-icon>my_location</mat-icon>
-    </button>
+
+    <div id="bottomDiv">
+      <button mat-fab id="refreshButton" (click)="refresh()">
+        <mat-icon>my_location</mat-icon>
+      </button>
+
+      <div id="debugSendDiv" *ngIf="this.clickedPos">
+
+        <div id="debugSendText">
+          <p *ngIf="!this.debugScanCompleted">Click to scan</p>
+          <p *ngIf="this.debugScanCompleted">Found {{this.apScanService.scanResult.getValue().measurements.length}} DHBW APs</p>
+        </div>
+
+        <button
+          *ngIf="this.debugScanCompleted"
+          mat-mini-fab
+          class="sendClickedButton"
+          (click)="sendCurrentPos()"
+        >
+          <mat-icon [class.pulse]="this.apiService.$sending | async">send</mat-icon>
+        </button>
+
+        <button
+          *ngIf="!this.debugScanCompleted"
+          mat-mini-fab
+          class="sendClickedButton"
+          (click)="scanNetwork()"
+        >
+          <mat-icon [class.pulse]="this.apScanService.$scanning | async">wifi_find</mat-icon>
+        </button>
+
+      </div>
+    </div>
+
+
   </div>
 </ion-content>

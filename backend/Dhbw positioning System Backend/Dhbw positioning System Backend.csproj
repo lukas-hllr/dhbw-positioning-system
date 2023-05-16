@@ -6,7 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="alglib.net" Version="3.19.0" />
+    <PackageReference Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
+    <PackageReference Include="GeoJSON.Net" Version="1.2.19" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.11">
       <PrivateAssets>all</PrivateAssets>
@@ -17,6 +22,13 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
     <PackageReference Include="Stub.System.Data.SQLite.Core.NetStandard" Version="1.0.116" />
   </ItemGroup>
+  
+  <Target Name="CopyGeoJson" AfterTargets="Build">
+    <ItemGroup>
+      <MockFile Include="$(ProjectDir)..\..\frontend\src\assets\map-levels\2og_cal.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MockFile)" DestinationFolder="$(OutDir)" />
+  </Target>
 
 
 </Project>

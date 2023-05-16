@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
+using Dhbw_positioning_System_Backend.Calculation;
 using Dhbw_positioning_System_Backend.Model;
-using Newtonsoft.Json;
-using NuGet.Protocol;
+using Dhbw_positioning_System_Backend.Model.dto;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,66 +24,38 @@ namespace Dhbw_positioning_System_Backend.Controllers
             _context = context;
         }
 
-        // GET: Measurement
+        // GET: /Measurement (All Measurements)
         [HttpGet]
-        public IEnumerable<Measurement> Get()
+        public IEnumerable<MeasurementDto> GetAllMeasurements()
         {
-            return _context.Measurement.ToList();
+            return _context.Measurement.ToList().ConvertAll(m => new MeasurementDto(m));
+        }
+        
+        // GET: /Measurement (Measurement by ID)
+        [HttpGet("{MeasurementId:long}", Name = "GetMeasurement")]
+        public ActionResult<MeasurementDto> GetMeasurement(long MeasurementId)
+        {
+            var m = _context.Measurement.Find(MeasurementId);
+
+            if (m == null) {
+                return NotFound();
+            } 
+
+            return new MeasurementDto(m);
         }
 
-        // POST api/<MeasurementController>
-        // [HttpPost]
-        // public ActionResult<Measurement> Post(Measurement measurement)
-        // {
-        //     var e = _context.Measurement.Add(new Measurement()
-        //     {
-        //         Date = measurement.Date,
-        //         LatitudeHighAccuracy = measurement.LatitudeHighAccuracy,
-        //         LongitudeHighAccuracy = measurement.LongitudeHighAccuracy,
-        //         NetworkMeasurement = measurement.NetworkMeasurement
-        //     });
-        //     _context.SaveChanges();
-        //     return Ok();
-        // }
-
-        //POST /Measurement/new
-        [HttpPost("new")]
-        public HttpResponseMessage PostNew(DataSet dataset)
+        //POST /Measurement (new Measurement)
+        [HttpPost(Name = "NewMeasurement")]
+        public ActionResult NewMeasurement(MeasurementDto mDto)
         {
-            var mId = _context.Measurement.Add(new Measurement()
-            {
-                LongitudeHighAccuracy = dataset.PositionHighAccuracy.Longitude,
-                LatitudeHighAccuracy = dataset.PositionHighAccuracy.Latitude,
-                LongitudeLowAccuracy = dataset.PositionLowAccuracy.Longitude,
-                LatitudeLowAccuracy = dataset.PositionLowAccuracy.Latitude,
-                Date = dataset.Timestamp
-            }).Entity;
+            var m = mDto.toMeasurement();
+            m.Timestamp = null;
+
+            _context.Measurement.Add(m);
+
             _context.SaveChanges();
-            foreach (var nw in dataset.Measurements)
-            {
-                _context.NetworkMeasurement.Add(new NetworkMeasurement()
-                {
-                    MeasurementId = mId.MeasurementId,
-                    MacAddress = nw.MAC,
-                    NetworkSsid = nw.SSID,
-                    MeasuredStrength = nw.Level,
-                });
-            }
-            _context.SaveChanges();
-            //Set content of ResponseMessage?
-            return new HttpResponseMessage(HttpStatusCode.Created);
+
+            return CreatedAtRoute("GetMeasurement", new {m.MeasurementId}, new MeasurementDto(m));
         }
-        // // PUT api/<MeasurementController>/5
-        // [HttpPut("{id}")]
-        // public void Put(int id, [FromBody] string value)
-        // {
-        //
-        // }
-        //
-        // // DELETE api/<MeasurementController>/5
-        // [HttpDelete("{id}")]
-        // public void Delete(int id)
-        // {
-        // }
     }
 }

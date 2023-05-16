@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {MeassurementModel} from '../../model/meassurement.model';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {MeasurementModel} from '../../model/measurement.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {map} from 'rxjs/operators';
+import {MeasurementEntity} from '../../model/measurement-entity';
 import {PositionModel} from "../../model/position.model";
-import {ApScanItemModel} from "../../model/ap-scan-item.model";
+import {MeasurementBackendModel} from "../../model/measurement-backend.model";
+import { LocationModel } from 'src/app/model/location.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,27 +22,18 @@ export class ApiService {
     this.$sending = new BehaviorSubject(false);
   }
 
-  public writeMeassurement(m: MeassurementModel): Observable<any> {
+  public writeMeasurement(m: MeasurementBackendModel): Observable<any> {
     this.$sending.next(true);
-    return this.http.post<any>(`${environment.apiUrl}/`, m)
-      .pipe(map(writtenMeassurement => {
+    return this.http.post<any>(`${environment.apiUrl}/measurement`, m)
+      .pipe(map(writtenMeasurement => {
         this.$sending.next(false);
-        return writtenMeassurement;
+        return writtenMeasurement;
       }));
   }
 
-  public getMeassurement(m: MeassurementModel): Observable<any> {
+  public getLocation(scan: MeasurementEntity[]): Observable<LocationModel> {
     this.$sending.next(true);
-    return this.http.post<any>(`${environment.apiUrl}/`, m)
-      .pipe(map(writtenMeassurement => {
-        this.$sending.next(false);
-        return writtenMeassurement;
-      }));
-  }
-
-  public getPosition(scan: ApScanItemModel): Observable<PositionModel> {
-    this.$sending.next(true);
-    return this.http.get<PositionModel>(`${environment.apiUrl}/position`, scan)
+    return this.http.post<LocationModel>(`${environment.apiUrl}/location`, scan)
       .pipe(map(p => {
         this.$sending.next(false);
         return p;
