@@ -33,20 +33,37 @@ public class AnalyseData
     }
 
     [Test]
-    public void testRoomAccuracy()
+    public void TestRoomAccuracy()
     {
         var measurements = _context.Measurement.ToList();
-        Console.WriteLine(measurements.Count);
         foreach (var m in measurements)
-            {
-                ExtractDistancesAndAps(m.MeasurementId, out var distances, out var coordinates);
+        {
+            ExtractDistancesAndAps(m.MeasurementId, out var distances, out var coordinates);
 
-                if (coordinates.Count < 3) continue;
-                Multilateration multilateration = new Multilateration(coordinates.ToArray(), distances.ToArray());
-                var resultBFGS = multilateration.FindOptimalLocationLBFGS();
-                GeoCoordinate groundTruth = new GeoCoordinate(m.LatitudeGroundTruth, m.LongitudeGroundTruth);
-                Console.WriteLine(_rayCastingAlgorithm.GetRoom(groundTruth)+","+_rayCastingAlgorithm.GetRoom(resultBFGS));
-            }
+            if (coordinates.Count < 3) continue;
+            Multilateration multilateration = new Multilateration(coordinates.ToArray(), distances.ToArray());
+            var resultBfgs = multilateration.FindOptimalLocationLBFGS();
+            GeoCoordinate groundTruth = new GeoCoordinate(m.LatitudeGroundTruth, m.LongitudeGroundTruth);
+            Console.WriteLine(_rayCastingAlgorithm.GetRoom(groundTruth)+","+_rayCastingAlgorithm.GetRoom(resultBfgs));
+        }
+    }
+    
+    [Test]
+    public void TestNearestDoor()
+    {
+        var measurements = _context.Measurement.ToList();
+        
+        foreach (var m in measurements)
+        {
+            ExtractDistancesAndAps(m.MeasurementId, out var distances, out var coordinates);
+
+            if (coordinates.Count < 3) continue;
+            Multilateration multilateration = new Multilateration(coordinates.ToArray(), distances.ToArray());
+            var resultBfgs = multilateration.FindOptimalLocationLBFGS();
+            GeoCoordinate groundTruth = new GeoCoordinate(m.LatitudeGroundTruth,m.LongitudeGroundTruth);
+            Console.WriteLine(_rayCastingAlgorithm.GetClosestDoor(groundTruth)+","+_rayCastingAlgorithm.GetClosestDoor(resultBfgs));
+        }
+
     }
 
     [Test]
