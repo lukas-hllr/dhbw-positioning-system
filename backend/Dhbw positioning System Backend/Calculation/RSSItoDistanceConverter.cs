@@ -5,8 +5,8 @@ namespace Dhbw_positioning_System_Backend.Calculation;
 
 public static class RSSItoDistanceConverter
 {
-    private const double SignalPropagation24GHz = 4.25; //Usually between 2 and 4.3, has to be tested.  
-    private const double SignalPropagation5GHz = 4.25; //Usually between 2 and 4.3, has to be tested.  
+    private const double SignalPropagation24GHz = 3.31; //Usually between 2 and 4.3, has to be tested.  
+    private const double SignalPropagation5GHz = 4.33; //Usually between 2 and 4.3, has to be tested.  
     private const double RssiAtOneMeter24GHz = -20; //Measured reference-RSSI at a distance of 1m  
     private const double RssiAtOneMeter5GHz = -20; //Measured reference-RSSI at a distance of 1m  
 
