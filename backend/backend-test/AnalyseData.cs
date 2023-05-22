@@ -7,6 +7,7 @@ using Dhbw_positioning_System_Backend.Model.dto;
 using Dhbw_positioning_System_Backend.Controllers;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace backend_test.TestData;
 
@@ -32,6 +33,40 @@ public class AnalyseData
     }
 
     [Test]
+    public void TestRoomAccuracy()
+    {
+        var measurements = _context.Measurement.ToList();
+        foreach (var m in measurements)
+        {
+            ExtractDistancesAndAps(m.MeasurementId, out var distances, out var coordinates);
+
+            if (coordinates.Count < 3) continue;
+            Multilateration multilateration = new Multilateration(coordinates.ToArray(), distances.ToArray());
+            var resultBfgs = multilateration.FindOptimalLocationLBFGS();
+            GeoCoordinate groundTruth = new GeoCoordinate(m.LatitudeGroundTruth, m.LongitudeGroundTruth);
+            Console.WriteLine(_rayCastingAlgorithm.GetRoom(groundTruth)+","+_rayCastingAlgorithm.GetRoom(resultBfgs));
+        }
+    }
+    
+    [Test]
+    public void TestNearestDoor()
+    {
+        var measurements = _context.Measurement.ToList();
+        
+        foreach (var m in measurements)
+        {
+            ExtractDistancesAndAps(m.MeasurementId, out var distances, out var coordinates);
+
+            if (coordinates.Count < 3) continue;
+            Multilateration multilateration = new Multilateration(coordinates.ToArray(), distances.ToArray());
+            var resultBfgs = multilateration.FindOptimalLocationLBFGS();
+            GeoCoordinate groundTruth = new GeoCoordinate(m.LatitudeGroundTruth,m.LongitudeGroundTruth);
+            Console.WriteLine(_rayCastingAlgorithm.GetClosestDoor(groundTruth)+","+_rayCastingAlgorithm.GetClosestDoor(resultBfgs));
+        }
+
+    }
+
+    [Test]
     public void testAlgorithmPerformance()
     {
         Random random = new Random();
@@ -42,6 +77,7 @@ public class AnalyseData
         Benchmark(() => { multilateration.FindOptimalLocationLBFGS(); }, 100000);
         Benchmark(() => { multilateration.FindOptimalLocationLM(); }, 100000);
     }
+
     private static void Benchmark(Action act, int iterations)
     {
         GC.Collect();
@@ -51,8 +87,9 @@ public class AnalyseData
         {
             act.Invoke();
         }
+
         sw.Stop();
-        Console.WriteLine((sw.ElapsedMilliseconds / (iterations+0.0)).ToString());
+        Console.WriteLine((sw.ElapsedMilliseconds / (iterations + 0.0)).ToString());
     }
 
     [Test]
@@ -62,7 +99,7 @@ public class AnalyseData
         List<GeoCoordinate> gTList = new List<GeoCoordinate>();
         List<GeoCoordinate> LMList = new List<GeoCoordinate>();
         List<GeoCoordinate> BFSGList = new List<GeoCoordinate>();
-        
+
         foreach (var m in measurements)
         {
             ExtractDistancesAndAps(m.MeasurementId, out var distances, out var coordinates);
@@ -77,11 +114,12 @@ public class AnalyseData
             BFSGList.Add(resultBFGS);
             LMList.Add(resultLM);
         }
-        
+
         for (int i = 0; i < BFSGList.Count; i++)
         {
             Console.WriteLine(BFSGList[i].GetDistanceTo(gTList[i]));
         }
+
         Console.WriteLine();
         for (int i = 0; i < LMList.Count; i++)
         {
@@ -89,7 +127,8 @@ public class AnalyseData
         }
     }
 
-    private void ExtractDistancesAndAps(long measurementId, out List<double> distances, out List<GeoCoordinate> coordinates)
+    private void ExtractDistancesAndAps(long measurementId, out List<double> distances,
+        out List<GeoCoordinate> coordinates, int rssiCutOff = -100)
     {
         List<MeasurementEntity> dataPoints =
             ExcludeDuplicates(_context.MeasurementEntity.Where(mE => mE.MeasurementId == measurementId));
@@ -101,8 +140,10 @@ public class AnalyseData
                 ap.Mac.Remove(16, 1).ToLower() + "0"
             );
 
-            if (correspondingAp == null) continue;
-            distances.Add(RSSItoDistanceConverter.ConvertWithRegression(ap.Rssi)); //Konvertierung von RSSI zu Distanz
+            if (correspondingAp == null || ap.Rssi < rssiCutOff) continue;
+            distances.Add(ap.Ssid.Equals("DHBW-KA5")
+                ? RSSItoDistanceConverter.ConvertWithOptimizedFormula5G(ap.Rssi)
+                : RSSItoDistanceConverter.ConvertWithOptimizedFormula2G(ap.Rssi));
             coordinates.Add(new GeoCoordinate(correspondingAp.Latitude, correspondingAp.Longitude));
         }
     }
@@ -129,8 +170,8 @@ public class AnalyseData
     }
 
     [Test]
-    public void testDistancesToGroundTruthAndLocationServices(){
-
+    public void testDistancesToGroundTruthAndLocationServices()
+    {
         var res = calcDbMeasurements();
 
         var groundTruthList = res["groundTruth"]! as List<GeoCoordinate>;
@@ -147,7 +188,8 @@ public class AnalyseData
 
     }
 
-    private Dictionary<string, dynamic> calcDbMeasurements(bool writeCsv = true){
+    private Dictionary<string, dynamic> calcDbMeasurements(bool writeCsv = true)
+    {
         var result = new Dictionary<string, dynamic>();
 
         var groundTruthList = new List<GeoCoordinate>();
@@ -160,14 +202,15 @@ public class AnalyseData
         {
             var measurementEntities = new List<MeasurementEntityDto>();
 
-            foreach(var me in m.MeasurementEntity)
+            foreach (var me in m.MeasurementEntity)
             {
                 measurementEntities.Add(new MeasurementEntityDto(me));
             }
 
             var groundTruth = new GeoCoordinate(m.LatitudeGroundTruth, m.LongitudeGroundTruth);
             var calculated = _locationController.GetLocation(measurementEntities).Value!;
-            var locationServices = new GeoCoordinate((double)m.LatitudeHighAccuracy, (double)m.LongitudeHighAccuracy) { VerticalAccuracy = (double)m.AccuracyHighAccuracy };
+            var locationServices = new GeoCoordinate((double) m.LatitudeHighAccuracy, (double) m.LongitudeHighAccuracy)
+                {VerticalAccuracy = (double) m.AccuracyHighAccuracy};
 
             groundTruthList.Add(groundTruth);
             locationServicesList.Add(locationServices);
@@ -193,7 +236,10 @@ public class AnalyseData
 
     private void writeResultsToCsv(Dictionary<string, dynamic> res)
     {
-        var filePath = Path.Join(Directory.GetParent(Path.GetDirectoryName(TestContext.CurrentContext.TestDirectory)).Parent.FullName, "results.csv");
+        var filePath =
+            Path.Join(
+                Directory.GetParent(Path.GetDirectoryName(TestContext.CurrentContext.TestDirectory)).Parent.FullName,
+                "results.csv");
         var csv = new StringBuilder();
         var csvHeader = "lat;lng;latCalculated;lngCalculated;accCalculated;distanceToCalculated;latLocationServices;lngLocationServices;accCalculated;distanceToLocationServices";
         csv.AppendLine(csvHeader);

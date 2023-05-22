@@ -13,8 +13,13 @@
     </ion-toolbar>
   </ion-header>
 
-  <button style="width: 100%; height:50px; border: solid 1px black" (click)="this.apScanService.scan()">scan</button>
-  <button style="width: 100%; height:50px; border: solid 1px black" [disabled]="this.apScanService.latestFailed" (click)="this.apScanService.send()">send latest</button>
+  <button
+    mat-raised-button
+    class="sendButton"
+    (click)="this.apScanService.scan()"
+  >
+    Scan
+  </button>
 
   <mat-accordion>
 
